@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>nastajus GitHub Archive</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;600&family=Crimson+Pro:wght@400;600&display=swap');
+
+    :root {
+      --bg: #0f140f;
+      --bg-glow: #16291b;
+      --panel: #141b14;
+      --panel-2: #1b251b;
+      --ink: #e8f1e8;
+      --muted: #a7b3a6;
+      --accent: #9ad66f;
+      --accent-2: #f1c27a;
+      --private: #f08b6a;
+      --grid-empty: #223022;
+      --grid-1: #2f5e3b;
+      --grid-2: #3c7b3f;
+      --grid-3: #59a94f;
+      --grid-4: #7bd354;
+      --cell: 14px;
+      --gap: 4px;
+      --radius: 14px;
+      --shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Crimson Pro", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 400px at 10% -10%, rgba(154, 214, 111, 0.12), transparent),
+        radial-gradient(900px 500px at 90% 0%, rgba(241, 194, 122, 0.12), transparent),
+        linear-gradient(180deg, var(--bg), var(--bg-glow) 60%, #0b100b 100%);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 36px 24px 12px;
+      max-width: 1200px;
+      margin: 0 auto;
+      animation: rise 700ms ease-out;
+    }
+
+    h1 {
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: clamp(2rem, 3vw, 3.2rem);
+      margin: 0 0 8px;
+    }
+
+    p.lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 800px;
+    }
+
+    nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--ink);
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: "Oswald", sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: transform 200ms ease, background 200ms ease;
+    }
+
+    nav a:hover {
+      transform: translateY(-2px);
+      background: rgba(154, 214, 111, 0.2);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 24px 64px;
+      display: grid;
+      gap: 24px;
+    }
+
+    section {
+      background: var(--panel);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    section h2 {
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0 0 12px;
+      font-size: 1.4rem;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .legend span {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .heatmap {
+      display: grid;
+      gap: 24px;
+    }
+
+    .year-block {
+      background: var(--panel-2);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .year-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .year-header h3 {
+      font-family: "Oswald", sans-serif;
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .year-grid {
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-rows: repeat(7, var(--cell));
+      gap: var(--gap);
+      align-content: start;
+    }
+
+    .day-cell {
+      width: var(--cell);
+      height: var(--cell);
+      border-radius: 3px;
+      background: var(--grid-empty);
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    .day-cell:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    }
+
+    .day-cell.level-1 { background: var(--grid-1); }
+    .day-cell.level-2 { background: var(--grid-2); }
+    .day-cell.level-3 { background: var(--grid-3); }
+    .day-cell.level-4 { background: var(--grid-4); }
+    .day-cell.outside { background: #1a231a; opacity: 0.35; cursor: default; }
+    .day-cell.flash {
+      animation: pulse 1.2s ease;
+      outline: 2px solid var(--accent-2);
+      outline-offset: 2px;
+    }
+
+    .details {
+      display: grid;
+      gap: 12px;
+    }
+
+    .details .panel {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .details h4 {
+      margin: 0 0 8px;
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.04em;
+    }
+
+    .detail-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.06em;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .commit-list {
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .commit-item {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .commit-item:last-child { border-bottom: none; }
+
+    .repo-group {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .repo-group:last-child { border-bottom: none; }
+
+    .repo-title {
+      font-family: "Oswald", sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .commit-subject {
+      font-size: 1rem;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .commit-subject:hover {
+      color: var(--accent);
+    }
+
+    .commit-body {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 6px;
+      white-space: pre-wrap;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      cursor: pointer;
+    }
+
+    .commit-body.expanded {
+      -webkit-line-clamp: unset;
+    }
+
+    .commit-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .tag {
+      font-family: "Oswald", sans-serif;
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .tag.private {
+      background: rgba(240, 139, 106, 0.2);
+      color: var(--private);
+      border: 1px solid rgba(240, 139, 106, 0.4);
+    }
+
+    .repo-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .repo-card {
+      background: rgba(0, 0, 0, 0.22);
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .repo-card h3 {
+      margin: 0 0 6px;
+      font-family: "Oswald", sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+    }
+
+    .repo-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .repo-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    .data-links a {
+      color: var(--accent-2);
+      text-decoration: none;
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+    }
+
+    .stagger {
+      animation: fadeUp 500ms ease forwards;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 rgba(241, 194, 122, 0); }
+      50% { box-shadow: 0 0 20px rgba(241, 194, 122, 0.45); }
+      100% { box-shadow: 0 0 0 rgba(241, 194, 122, 0); }
+    }
+
+    @media (max-width: 780px) {
+      nav { justify-content: center; }
+      section { padding: 16px; }
+      .details { grid-template-columns: 1fr; }
+      .year-grid { overflow-x: auto; padding-bottom: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>nastajus GitHub Archive</h1>
+    <p class="lead">All repositories (public + private) cloned locally, with commit history aggregated into a single calendar heatmap. Click any day to inspect commits and jump to the repo locally or on GitHub.</p>
+    <nav>
+      <a href="#heatmap">Heatmap</a>
+      <a href="#details">Day Details</a>
+      <a href="#repos">Repositories</a>
+      <a href="#forks">Forks</a>
+      <a href="#data">Raw Data</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="heatmap">
+      <h2>All Years Heatmap</h2>
+      <div class="legend">
+        <span style="background: var(--grid-empty);"></span> none
+        <span style="background: var(--grid-1);"></span> low
+        <span style="background: var(--grid-2);"></span> medium
+        <span style="background: var(--grid-3);"></span> high
+        <span style="background: var(--grid-4);"></span> intense
+      </div>
+      <div id="heatmap-container" class="heatmap"></div>
+    </section>
+
+    <section id="details">
+      <h2>Day Details</h2>
+      <div class="details">
+        <div class="panel">
+          <a id="detail-title" class="detail-title" href="#heatmap">Select a day</a>
+          <div id="detail-meta" class="commit-meta">Click a green square to view commits.</div>
+        </div>
+        <div class="panel">
+          <h4>Commits</h4>
+          <div id="commit-list" class="commit-list">No day selected.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="repos">
+      <h2>Repositories</h2>
+      <div class="commit-meta">Forked repositories are excluded from the heatmap.</div>
+      <div id="repo-grid" class="repo-grid"></div>
+    </section>
+
+    <section id="forks">
+      <h2>Forks (Excluded from Heatmap)</h2>
+      <div id="fork-grid" class="repo-grid"></div>
+    </section>
+
+    <section id="data">
+      <h2>Raw Data</h2>
+      <div class="data-links">
+        <a href="data/commits.json">commits.json</a> |
+        <a href="data/commits.csv">commits.csv</a> |
+        <a href="data/repos.json">repos.json</a> |
+        <a href="data/repos.csv">repos.csv</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="data/commits.js"></script>
+  <script src="data/repos.js"></script>
+  <script>
+    const commits = window.COMMITS_DATA || [];
+    const repos = window.REPOS_DATA || [];
+
+    const commitMap = new Map();
+    const counts = [];
+
+    for (const c of commits) {
+      const key = c.commit_date_only;
+      if (!commitMap.has(key)) commitMap.set(key, []);
+      commitMap.get(key).push(c);
+    }
+
+    for (const [date, list] of commitMap.entries()) {
+      counts.push(list.length);
+    }
+
+    const maxCount = counts.length ? Math.max(...counts) : 0;
+    let currentDateStr = null;
+
+    function levelFor(count) {
+      if (count === 0) return 0;
+      if (maxCount === 0) return 0;
+      const level = Math.ceil((count / maxCount) * 4);
+      return Math.min(4, Math.max(1, level));
+    }
+
+    function buildYearBlock(year) {
+      const container = document.createElement('div');
+      container.className = 'year-block stagger';
+      container.dataset.year = year;
+
+      const header = document.createElement('div');
+      header.className = 'year-header';
+      const title = document.createElement('h3');
+      title.textContent = year;
+      const total = document.createElement('div');
+      total.className = 'commit-meta';
+      const yearCount = Array.from(commitMap.keys())
+        .filter(d => d.startsWith(year + '-'))
+        .reduce((sum, d) => sum + commitMap.get(d).length, 0);
+      total.textContent = yearCount + ' commits';
+      header.appendChild(title);
+      header.appendChild(total);
+
+      const grid = document.createElement('div');
+      grid.className = 'year-grid';
+
+      const start = new Date(Date.UTC(year, 0, 1));
+      const end = new Date(Date.UTC(year, 11, 31));
+      const startDay = start.getUTCDay();
+      const gridStart = new Date(start);
+      gridStart.setUTCDate(start.getUTCDate() - startDay);
+      const endDay = end.getUTCDay();
+      const gridEnd = new Date(end);
+      gridEnd.setUTCDate(end.getUTCDate() + (6 - endDay));
+      const totalDays = Math.round((gridEnd - gridStart) / 86400000) + 1;
+
+      for (let i = 0; i < totalDays; i++) {
+        const date = new Date(gridStart);
+        date.setUTCDate(gridStart.getUTCDate() + i);
+        const dateStr = date.toISOString().slice(0, 10);
+        const inYear = date >= start && date <= end;
+        const count = inYear && commitMap.has(dateStr) ? commitMap.get(dateStr).length : 0;
+        const cell = document.createElement('div');
+        cell.className = 'day-cell';
+        cell.dataset.date = dateStr;
+        cell.title = `${dateStr}: ${count} commit${count === 1 ? '' : 's'}`;
+        if (!inYear) {
+          cell.classList.add('outside');
+        } else if (count > 0) {
+          cell.classList.add('level-' + levelFor(count));
+        }
+        if (inYear) {
+          cell.addEventListener('click', () => {
+            renderDetails(dateStr);
+            location.hash = '#details';
+            document.getElementById('details').scrollIntoView({ behavior: 'smooth' });
+          });
+        }
+        grid.appendChild(cell);
+      }
+
+      container.appendChild(header);
+      container.appendChild(grid);
+      return container;
+    }
+
+    function renderHeatmap() {
+      const years = new Set();
+      for (const key of commitMap.keys()) {
+        years.add(parseInt(key.slice(0, 4), 10));
+      }
+      const sorted = Array.from(years).sort((a, b) => a - b);
+      const heatmapContainer = document.getElementById('heatmap-container');
+      heatmapContainer.innerHTML = '';
+
+      if (!sorted.length) {
+        const empty = document.createElement('div');
+        empty.textContent = 'No commits found.';
+        heatmapContainer.appendChild(empty);
+        return;
+      }
+
+      for (const year of sorted) {
+        heatmapContainer.appendChild(buildYearBlock(year));
+      }
+    }
+
+    function renderDetails(dateStr) {
+      const list = commitMap.get(dateStr) || [];
+      const title = document.getElementById('detail-title');
+      const meta = document.getElementById('detail-meta');
+      const container = document.getElementById('commit-list');
+      currentDateStr = dateStr;
+      title.textContent = dateStr;
+
+      if (!list.length) {
+        meta.textContent = '0 commits';
+        container.textContent = 'No commits on this day.';
+        return;
+      }
+
+      const sorted = [...list].sort((a, b) => a.commit_date.localeCompare(b.commit_date));
+
+      const repoCount = new Set(sorted.map(item => item.repo_name)).size;
+      meta.textContent = `${list.length} commit${list.length === 1 ? '' : 's'} across ${repoCount} repo${repoCount === 1 ? '' : 's'}`;
+      container.innerHTML = '';
+
+      let currentRepo = null;
+      let group = null;
+
+      for (const item of sorted) {
+        if (item.repo_name !== currentRepo) {
+          currentRepo = item.repo_name;
+          group = document.createElement('div');
+          group.className = 'repo-group';
+
+          const header = document.createElement('div');
+          header.className = 'repo-title';
+          const name = document.createElement('span');
+          name.textContent = item.repo_name;
+          header.appendChild(name);
+
+          if (item.repo_is_private) {
+            const tag = document.createElement('span');
+            tag.className = 'tag private';
+            tag.textContent = 'Private';
+            header.appendChild(tag);
+          }
+
+          const links = document.createElement('div');
+          links.className = 'repo-links';
+          const remote = document.createElement('a');
+          remote.href = item.repo_remote_url;
+          remote.textContent = 'Remote';
+          remote.target = '_blank';
+          const local = document.createElement('a');
+          local.href = item.repo_local_path + '/';
+          local.textContent = 'Local';
+          links.appendChild(remote);
+          links.appendChild(local);
+
+          group.appendChild(header);
+          group.appendChild(links);
+          container.appendChild(group);
+        }
+
+        const row = document.createElement('div');
+        row.className = 'commit-item';
+
+        const subject = document.createElement('a');
+        subject.className = 'commit-subject';
+        subject.textContent = item.commit_subject || '(no subject)';
+        subject.href = `${item.repo_remote_url}/commit/${item.commit_hash}`;
+        subject.target = '_blank';
+
+        const metaLine = document.createElement('div');
+        metaLine.className = 'commit-meta';
+        const time = item.commit_date ? item.commit_date.replace('T', ' ').replace('Z', ' UTC') : '';
+        metaLine.textContent = `${time}`;
+
+        row.appendChild(subject);
+        row.appendChild(metaLine);
+
+        const bodyText = (item.commit_body || '').trim();
+        if (bodyText) {
+          const body = document.createElement('div');
+          body.className = 'commit-body';
+          body.textContent = bodyText;
+          body.title = 'Click to expand';
+          body.addEventListener('click', () => {
+            body.classList.toggle('expanded');
+          });
+          row.appendChild(body);
+        }
+
+        group.appendChild(row);
+      }
+    }
+
+    function renderRepos() {
+      const grid = document.getElementById('repo-grid');
+      const forkGrid = document.getElementById('fork-grid');
+      grid.innerHTML = '';
+      forkGrid.innerHTML = '';
+
+      const primary = repos.filter(repo => !repo.is_fork);
+      const forks = repos.filter(repo => repo.is_fork);
+
+      const sorted = [...primary].sort((a, b) => {
+        if (a.is_private && !b.is_private) return 1;
+        if (!a.is_private && b.is_private) return -1;
+        return a.name.localeCompare(b.name);
+      });
+
+      const sortedForks = [...forks].sort((a, b) => a.name.localeCompare(b.name));
+
+      for (const repo of sorted) {
+        const card = document.createElement('div');
+        card.className = 'repo-card stagger';
+        const title = document.createElement('h3');
+        title.textContent = repo.name;
+        const meta = document.createElement('div');
+        meta.className = 'commit-meta';
+        const sizeParts = [];
+        if (repo.repo_size_kb !== null && repo.repo_size_kb !== undefined) {
+          sizeParts.push(`GitHub: ${repo.repo_size_kb} KB`);
+        }
+        if (repo.local_size_bytes !== null && repo.local_size_bytes !== undefined) {
+          const mb = (repo.local_size_bytes / (1024 * 1024)).toFixed(2);
+          sizeParts.push(`Local: ${mb} MB`);
+        }
+        meta.textContent = sizeParts.join(' | ');
+
+        const links = document.createElement('div');
+        links.className = 'repo-links';
+        const remote = document.createElement('a');
+        remote.href = repo.remote_url;
+        remote.textContent = 'Remote';
+        remote.target = '_blank';
+        const local = document.createElement('a');
+        local.href = repo.local_path + '/';
+        local.textContent = 'Local';
+        links.appendChild(remote);
+        links.appendChild(local);
+        if (repo.is_private) {
+          const tag = document.createElement('span');
+          tag.className = 'tag private';
+          tag.textContent = 'Private';
+          links.appendChild(tag);
+        }
+
+        card.appendChild(title);
+        card.appendChild(meta);
+        card.appendChild(links);
+        grid.appendChild(card);
+      }
+
+      for (const repo of sortedForks) {
+        const card = document.createElement('div');
+        card.className = 'repo-card stagger';
+        const title = document.createElement('h3');
+        title.textContent = repo.name;
+        const meta = document.createElement('div');
+        meta.className = 'commit-meta';
+        const sizeParts = [];
+        if (repo.repo_size_kb !== null && repo.repo_size_kb !== undefined) {
+          sizeParts.push(`GitHub: ${repo.repo_size_kb} KB`);
+        }
+        if (repo.local_size_bytes !== null && repo.local_size_bytes !== undefined) {
+          const mb = (repo.local_size_bytes / (1024 * 1024)).toFixed(2);
+          sizeParts.push(`Local: ${mb} MB`);
+        }
+        meta.textContent = sizeParts.join(' | ');
+
+        const links = document.createElement('div');
+        links.className = 'repo-links';
+        const remote = document.createElement('a');
+        remote.href = repo.remote_url;
+        remote.textContent = 'Remote';
+        remote.target = '_blank';
+        const local = document.createElement('a');
+        local.href = repo.local_path + '/';
+        local.textContent = 'Local';
+        links.appendChild(remote);
+        links.appendChild(local);
+        if (repo.is_private) {
+          const tag = document.createElement('span');
+          tag.className = 'tag private';
+          tag.textContent = 'Private';
+          links.appendChild(tag);
+        }
+
+        card.appendChild(title);
+        card.appendChild(meta);
+        card.appendChild(links);
+        forkGrid.appendChild(card);
+      }
+    }
+
+    renderHeatmap();
+    renderRepos();
+
+    document.getElementById('detail-title').addEventListener('click', (event) => {
+      if (!currentDateStr) return;
+      event.preventDefault();
+      const year = currentDateStr.slice(0, 4);
+      const yearBlock = document.querySelector(`.year-block[data-year='${year}']`);
+      if (yearBlock) {
+        yearBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        document.getElementById('heatmap').scrollIntoView({ behavior: 'smooth' });
+      }
+      const cell = document.querySelector(`.day-cell[data-date='${currentDateStr}']`);
+      if (cell) {
+        cell.classList.remove('flash');
+        void cell.offsetWidth;
+        cell.classList.add('flash');
+      }
+    });
+  </script>
+</body>
+</html>
