@@ -1,0 +1,75 @@
+# ADR
+
+## ADR-01
+
+### Context
+You asked for a local archive of all GitHub repositories (including private), raw commit data (messages, dates, sizes) exported to files, and a single-page HTML site that links to each repo (remote + local) and visualizes all commits as an interactive heatmap.
+
+### Decision
+- Use the GitHub CLI (`gh`) to enumerate repositories and access private repos with the existing authenticated token.
+- Clone all repositories into a local `repos/` folder and keep them up to date with `git fetch`.
+- Extract commit data from each repo with `git log --all --date=iso-strict`, store per-commit metadata, and aggregate by day for the heatmap.
+- Write raw data into `data/commits.json`, `data/commits.csv`, `data/repos.json`, and `data/repos.csv`, using ASCII-safe escaping where needed.
+- Generate `data/commits.js` and `data/repos.js` to allow `index.html` to load data without a local web server.
+- Build `index.html` as a single-page, multi-year heatmap view with clickable day cells and a detail panel, plus a repository index that clearly flags private repos.
+
+### Consequences
+- The dataset is complete for all cloned repos but may be large (tens of thousands of commits).
+- Private repos are clearly labeled in the UI while still remaining in local data files.
+- The HTML works as a file-based page without requiring a server, because it loads data via prebuilt JS globals.
+
+## ADR-02
+
+### Context
+The heatmap showed unexpected commit volume due to forked repositories (notably `processhacker`) being included in the aggregate.
+
+### Decision
+- Use `gh repo list --json isFork` to detect forked repositories.
+- Exclude all forked repositories from commit extraction and heatmap aggregation.
+- List forked repositories separately in the UI, after primary repositories, and label them as excluded.
+
+### Consequences
+- The heatmap now reflects only non-fork repositories.
+- Forks remain visible for reference without polluting contribution counts.
+
+## ADR-03
+
+### Context
+Quality-of-life updates were requested for navigation, daily detail rendering, and document organization, including showing commit bodies and better repo grouping.
+
+### Decision
+- Move ADR/TRN/RUN documentation into a dedicated `docs/` folder.
+- Extend commit extraction to include commit bodies for per-commit display.
+- Group daily commits by contiguous repo sequences, display repo headers once per sequence, and move private labels to the repo header.
+- Add local navigation between heatmap and day details with animated highlighting of the selected day.
+
+### Consequences
+- The data files are regenerated with a `commit_body` field and updated CSV columns.
+- The day details view is more compact and readable while preserving per-commit navigation to GitHub.
+- Documentation files are centralized under `docs/`.
+
+## ADR-04
+
+### Context
+The heatmap and repo lists rendered empty even though data files were present.
+
+### Decision
+- Trace the failure to corrupted JavaScript operators in `index.html`.
+- Restore the intended ternary (`?:`) and logical (`&&`) expressions in the heatmap rendering code.
+
+### Consequences
+- The UI renders again using the existing data files.
+- A follow-up note in docs records that global string replacements should avoid touching JS operators.
+
+## ADR-05
+
+### Context
+The dashboard files were moved into an `Overview/` folder while repos stayed at the root, breaking local path references.
+
+### Decision
+- Update all local repo path references in data files to use `../repos/` relative to `Overview/`.
+- Keep `index.html` and `data/` paths unchanged since they remain co-located in `Overview/`.
+
+### Consequences
+- Local repo links work again from `Overview/index.html`.
+- Data files now reflect the new relative paths for any downstream use.
