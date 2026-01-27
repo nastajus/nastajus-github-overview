@@ -102,3 +102,18 @@
 
 ### Feedback / Suggestions
 - If you plan to move folders again, we can add a small path-resolution helper in the UI to avoid hardcoded paths.
+
+## RUN-07
+
+### Session Notes
+- Created a Git repo in `Overview/` with three backdated, thematic commits.
+- Published the repo to GitHub as `nastajus-github-overview` and pushed `master`.
+
+### What Worked
+- Thematic commit grouping produced a cleaner narrative history than per-file commits.
+
+### What Was Tricky
+- None.
+
+### Feedback / Suggestions
+- If you want the default branch to be `main`, I can rename it and update the remote.
