@@ -92,3 +92,41 @@ for this overview folder, create a repo inside it, and create a logical series o
 - Initialized a Git repository in `Overview/` and created three thematic, backdated commits.
 - Published the repository to GitHub as `nastajus-github-overview` (private) and pushed `master`.
 - Appended RUN-07 and TRN-07 entries.
+
+## TRN-08
+
+### Prompt (verbatim)
+
+```
+i want a change such that, when a project's name is clicked, in either the day details section, or the respositories section, that what happens is the all years heatmap enters into a modified state. i want to see only the green squares that relevant commits be clearly distinguishable. it can be an oversized outline, a brighter color, perhaps yellow, idk. it can pulsate more obviously, perhaps when hovered over.  all non-commit related days should dim, darken, become a less-visible but still visible color. idk. gray? black? a color that stands out less than the current green.  so while in this state, it becomes really clear which days are the commit related days.  this alternate view mode should have an easy obvious way to cnacel it. i'm unsure how. idk if i want to say by clicking anyehwre, or by having a button. try to pick an easy way.  it should be able to revert back to the full view. also once a project name is clicked, the view can snap back up to begin showing the earlist year that has commits.
+
+update all 3 markdowns appropriately.
+```
+
+### Actions Taken (summary)
+- Added a project filter mode that highlights only commit days for the selected repo and dims all others.
+- Made repo names clickable in Day Details and Repositories to activate the filter.
+- Added a visible "Clear filter" control and auto-scroll to the earliest year with commits.
+- Appended ADR-06, RUN-08, and TRN-08 entries.
+
+## TRN-09
+
+### Prompt (verbatim)
+
+```
+this looks great. i'm very pleased. commit this. 
+
+the clear filter button needs more visibility. make it stand out colorfully more. 
+
+now another feature i'd like. when in the unfiltered view, when hoevering over a squre, a tooltip appears. idk if you can use newlines in there, but if so, add bullets for each project underneath the number of commits.
+
+i'm also interested in another more robust feature, which may compete with the last a bit. i suppose they might both coexist fine. i want to experiment with an alternate mode/pathway that triggers when you click a square. currently it just jumps down to the list of commits. now i want another thing to happen.  when i click a single square, instead of jumping down right away to the list of commits, first i'd like to see a local popup near the box that lists all the projects committed taht day.  but also, i want unique nice colors assigned to distinguish each project. and then i want all the related squares that contain commits of those projects to show up in those project colors. so some challenges with this need to be resolved. one is that when other boxes contain multiple projects, what color to assign? is there a way you can change those boxes to show some triangles to encapsulate all unique colors for that day? another challenge will be consistency of colors as one clicks across different days. ideally the same color is only used once per project, and doesn't collide with any other project in the same overlapping time. i think reusing colors is fine, but it can never repeat in any day where two projecst use the same color.  i don't know how many unique colors you'd need, but i imagine it can be small, anywhere from 3-6 is my estimate.  i highly doubt more are needed, but i can't be sure until you analyze and tell me. i want the colors chosen to all be pleasing, and to be the spread of the rainbow. perhaps all pastels, idk. 
+
+build it if you can. describe limitations if any where appropriate. update the usual markdowns.
+```
+
+### Actions Taken (summary)
+- Made the clear filter button more prominent and colorful.
+- Added hover tooltips in unfiltered view with commit counts and per-day project lists.
+- Implemented day-focus mode with project color highlighting, conic gradients for multi-project days, and a popup with actions.
+- Added ADR-07, RUN-09, and TRN-09 entries.

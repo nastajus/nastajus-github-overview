@@ -117,3 +117,36 @@
 
 ### Feedback / Suggestions
 - If you want the default branch to be `main`, I can rename it and update the remote.
+
+## RUN-08
+
+### Session Notes
+- Implemented a repo-focused heatmap filter state with visual highlighting and dimming.
+- Added a clear filter control and wired repo names to activate filtering.
+- Auto-scrolls the heatmap to the earliest year with commits for the selected repo.
+
+### What Worked
+- The filter state can be toggled without reloading or regenerating data.
+
+### What Was Tricky
+- None.
+
+### Feedback / Suggestions
+- If you want multi-repo filters or stacked comparisons, we can extend the filter logic.
+
+## RUN-09
+
+### Session Notes
+- Added a day-focus interaction: clicking a square opens a popup and highlights relevant days in project colors.
+- Implemented color assignment that avoids collisions for co-occurring projects when palette capacity allows.
+- Added hover tooltips in the unfiltered heatmap with per-day project bullets.
+- Increased the visibility of the clear filter button.
+
+### What Worked
+- Conic gradients provide a clear multi-project indicator without additional DOM elements.
+
+### What Was Tricky
+- Ensuring color uniqueness across co-occurring projects required a lightweight graph-coloring pass.
+
+### Feedback / Suggestions
+- If the maximum projects-per-day exceeds the palette, we can extend the palette or switch to patterned overlays.

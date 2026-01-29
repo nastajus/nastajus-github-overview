@@ -133,6 +133,53 @@
       gap: 24px;
     }
 
+    .heatmap-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .filter-pill {
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-pill strong {
+      color: var(--accent-2);
+      font-weight: 600;
+    }
+
+    .filter-clear {
+      border: none;
+      background: #ffe58a;
+      color: #1a1f1a;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      transition: transform 150ms ease, background 150ms ease;
+    }
+
+    .filter-clear:hover {
+      transform: translateY(-1px);
+      background: #ffdd5f;
+    }
+
     .year-block {
       background: var(--panel-2);
       border-radius: 12px;
@@ -184,6 +231,42 @@
     .day-cell.flash {
       animation: pulse 1.2s ease;
       outline: 2px solid var(--accent-2);
+      outline-offset: 2px;
+    }
+
+    .heatmap.filtered .day-cell {
+      background: #1a1f1a;
+      opacity: 0.5;
+    }
+
+    .heatmap.filtered .day-cell.outside {
+      opacity: 0.2;
+    }
+
+    .heatmap.filtered .day-cell.highlight {
+      background: #f6e96b;
+      opacity: 1;
+      outline: 2px solid #ffe58a;
+      outline-offset: 2px;
+      animation: glow 1.4s ease-in-out infinite;
+    }
+
+    .heatmap.filtered .day-cell.highlight:hover {
+      animation: glow 0.8s ease-in-out infinite;
+    }
+
+    .heatmap.day-focus .day-cell {
+      background: #1a1f1a;
+      opacity: 0.45;
+    }
+
+    .heatmap.day-focus .day-cell.outside {
+      opacity: 0.2;
+    }
+
+    .heatmap.day-focus .day-cell.focus-highlight {
+      opacity: 1;
+      outline: 2px solid rgba(255, 255, 255, 0.5);
       outline-offset: 2px;
     }
 
@@ -245,6 +328,117 @@
       align-items: center;
       gap: 10px;
       margin-bottom: 8px;
+    }
+
+    .repo-filter {
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      color: var(--ink);
+      font-family: "Oswald", sans-serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+
+    .repo-filter:hover {
+      color: var(--accent-2);
+    }
+
+    .tooltip {
+      position: absolute;
+      z-index: 20;
+      background: rgba(15, 20, 15, 0.95);
+      color: var(--ink);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      max-width: 260px;
+      pointer-events: none;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 120ms ease, transform 120ms ease;
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tooltip ul {
+      margin: 6px 0 0;
+      padding-left: 18px;
+    }
+
+    .tooltip li {
+      margin: 2px 0;
+    }
+
+    .day-popup {
+      position: absolute;
+      z-index: 30;
+      background: rgba(20, 27, 20, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px;
+      min-width: 220px;
+      box-shadow: var(--shadow);
+    }
+
+    .day-popup h4 {
+      margin: 0 0 8px;
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.04em;
+    }
+
+    .day-popup ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .day-popup li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .popup-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .popup-actions button {
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--ink);
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+    }
+
+    .popup-actions button.primary {
+      background: #f6e96b;
+      color: #1a1f1a;
     }
 
     .commit-subject {
@@ -354,6 +548,12 @@
       100% { box-shadow: 0 0 0 rgba(241, 194, 122, 0); }
     }
 
+    @keyframes glow {
+      0% { box-shadow: 0 0 0 rgba(246, 233, 107, 0.1); }
+      50% { box-shadow: 0 0 16px rgba(246, 233, 107, 0.6); }
+      100% { box-shadow: 0 0 0 rgba(246, 233, 107, 0.1); }
+    }
+
     @media (max-width: 780px) {
       nav { justify-content: center; }
       section { padding: 16px; }
@@ -378,6 +578,12 @@
   <main>
     <section id="heatmap">
       <h2>All Years Heatmap</h2>
+      <div class="heatmap-controls">
+        <div id="filter-pill" class="filter-pill" style="display: none;">
+          Filtered by project: <strong id="filter-name"></strong>
+        </div>
+        <button id="filter-clear" class="filter-clear" style="display: none;">Clear filter</button>
+      </div>
       <div class="legend">
         <span style="background: var(--grid-empty);"></span> none
         <span style="background: var(--grid-1);"></span> low
@@ -424,6 +630,9 @@
     </section>
   </main>
 
+  <div id="tooltip" class="tooltip"></div>
+  <div id="day-popup" class="day-popup" style="display: none;"></div>
+
   <script src="data/commits.js"></script>
   <script src="data/repos.js"></script>
   <script>
@@ -432,11 +641,25 @@
 
     const commitMap = new Map();
     const counts = [];
+    const repoDateMap = new Map();
+    const repoByDate = new Map();
+    let currentRepoFilter = null;
+    let dayFocus = null;
+    let dayFocusProjects = [];
+    let dayFocusColors = new Map();
+    let projectColors = new Map();
+    let colorConflicts = false;
 
     for (const c of commits) {
       const key = c.commit_date_only;
       if (!commitMap.has(key)) commitMap.set(key, []);
       commitMap.get(key).push(c);
+
+      if (!repoDateMap.has(c.repo_name)) repoDateMap.set(c.repo_name, new Set());
+      repoDateMap.get(c.repo_name).add(c.commit_date_only);
+
+      if (!repoByDate.has(key)) repoByDate.set(key, new Set());
+      repoByDate.get(key).add(c.repo_name);
     }
 
     for (const [date, list] of commitMap.entries()) {
@@ -445,6 +668,212 @@
 
     const maxCount = counts.length ? Math.max(...counts) : 0;
     let currentDateStr = null;
+    const heatmapContainer = document.getElementById('heatmap-container');
+    const filterPill = document.getElementById('filter-pill');
+    const filterName = document.getElementById('filter-name');
+    const filterClear = document.getElementById('filter-clear');
+    const tooltip = document.getElementById('tooltip');
+    const dayPopup = document.getElementById('day-popup');
+    const palette = [
+      '#f6e96b', '#ffb347', '#ff7aa2', '#c97cff', '#7aa2ff', '#5dd4c3',
+      '#7bd354', '#f29e4c', '#f94144', '#b8f2e6', '#f1c27a', '#a5a6f6'
+    ];
+
+    projectColors = buildProjectColorMap();
+
+    function applyRepoFilter(repoName) {
+      clearDayFocus();
+      currentRepoFilter = repoName;
+      const dates = repoDateMap.get(repoName) || new Set();
+      filterName.textContent = repoName;
+      filterPill.style.display = 'inline-flex';
+      filterClear.style.display = 'inline-flex';
+      heatmapContainer.classList.add('filtered');
+
+      document.querySelectorAll('.day-cell').forEach((cell) => {
+        if (cell.classList.contains('outside')) return;
+        if (dates.has(cell.dataset.date)) {
+          cell.classList.add('highlight');
+        } else {
+          cell.classList.remove('highlight');
+        }
+      });
+
+      if (dates.size > 0) {
+        const earliest = Array.from(dates).sort()[0];
+        const year = earliest.slice(0, 4);
+        const yearBlock = document.querySelector(`.year-block[data-year='${year}']`);
+        if (yearBlock) {
+          yearBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          document.getElementById('heatmap').scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+
+    function clearRepoFilter() {
+      currentRepoFilter = null;
+      filterPill.style.display = 'none';
+      filterClear.style.display = 'none';
+      heatmapContainer.classList.remove('filtered');
+      document.querySelectorAll('.day-cell.highlight').forEach((cell) => {
+        cell.classList.remove('highlight');
+      });
+    }
+
+    function buildProjectColorMap() {
+      const adjacency = new Map();
+      for (const projects of repoByDate.values()) {
+        const arr = Array.from(projects);
+        for (let i = 0; i < arr.length; i++) {
+          const a = arr[i];
+          if (!adjacency.has(a)) adjacency.set(a, new Set());
+          for (let j = i + 1; j < arr.length; j++) {
+            const b = arr[j];
+            if (!adjacency.has(b)) adjacency.set(b, new Set());
+            adjacency.get(a).add(b);
+            adjacency.get(b).add(a);
+          }
+        }
+      }
+
+      const projects = Array.from(adjacency.keys());
+      projects.sort((a, b) => (adjacency.get(b)?.size || 0) - (adjacency.get(a)?.size || 0));
+
+      const colors = new Map();
+      colorConflicts = false;
+
+      for (const project of projects) {
+        const used = new Set();
+        for (const neighbor of adjacency.get(project) || []) {
+          if (colors.has(neighbor)) used.add(colors.get(neighbor));
+        }
+        const available = palette.find((c) => !used.has(c));
+        if (available) {
+          colors.set(project, available);
+        } else {
+          colors.set(project, palette[projects.indexOf(project) % palette.length]);
+          colorConflicts = true;
+        }
+      }
+      return colors;
+    }
+
+    function setDayFocus(dateStr) {
+      clearRepoFilter();
+      tooltip.classList.remove('visible');
+      dayFocus = dateStr;
+      const projectSet = repoByDate.get(dateStr) || new Set();
+      dayFocusProjects = Array.from(projectSet);
+      dayFocusColors = new Map();
+      dayFocusProjects.forEach((name) => {
+        dayFocusColors.set(name, projectColors.get(name) || palette[0]);
+      });
+      heatmapContainer.classList.add('day-focus');
+
+      document.querySelectorAll('.day-cell').forEach((cell) => {
+        if (cell.classList.contains('outside')) return;
+        const dateProjects = repoByDate.get(cell.dataset.date);
+        if (!dateProjects) {
+          cell.classList.remove('focus-highlight');
+          cell.style.background = '';
+          return;
+        }
+        const matches = Array.from(dateProjects).filter((p) => dayFocusColors.has(p));
+        if (matches.length === 0) {
+          cell.classList.remove('focus-highlight');
+          cell.style.background = '';
+          return;
+        }
+        cell.classList.add('focus-highlight');
+        if (matches.length === 1) {
+          cell.style.background = dayFocusColors.get(matches[0]);
+        } else {
+          const colors = matches.map((p) => dayFocusColors.get(p));
+          cell.style.background = `conic-gradient(${colors.join(', ')})`;
+        }
+      });
+    }
+
+    function clearDayFocus() {
+      dayFocus = null;
+      dayFocusProjects = [];
+      dayFocusColors = new Map();
+      heatmapContainer.classList.remove('day-focus');
+      document.querySelectorAll('.day-cell.focus-highlight').forEach((cell) => {
+        cell.classList.remove('focus-highlight');
+        cell.style.background = '';
+      });
+      hideDayPopup();
+    }
+
+    function showDayPopup(cell, dateStr) {
+      const projects = Array.from(repoByDate.get(dateStr) || []);
+      dayPopup.innerHTML = '';
+      if (projects.length === 0) {
+        dayPopup.style.display = 'none';
+        return;
+      }
+      dayPopup.style.display = 'block';
+
+      const title = document.createElement('h4');
+      title.textContent = `Projects on ${dateStr}`;
+      dayPopup.appendChild(title);
+
+      const list = document.createElement('ul');
+      projects.forEach((project) => {
+        const li = document.createElement('li');
+        const swatch = document.createElement('span');
+        swatch.className = 'swatch';
+        swatch.style.background = dayFocusColors.get(project) || '#f6e96b';
+        li.appendChild(swatch);
+        const label = document.createElement('span');
+        label.textContent = project;
+        li.appendChild(label);
+        list.appendChild(li);
+      });
+      dayPopup.appendChild(list);
+
+      if (colorConflicts) {
+        const note = document.createElement('div');
+        note.className = 'commit-meta';
+        note.textContent = 'Note: limited palette may reuse colors on non-overlapping projects.';
+        dayPopup.appendChild(note);
+      }
+
+      const actions = document.createElement('div');
+      actions.className = 'popup-actions';
+      const view = document.createElement('button');
+      view.type = 'button';
+      view.className = 'primary';
+      view.textContent = 'View commits';
+      view.addEventListener('click', () => {
+        renderDetails(dateStr);
+        location.hash = '#details';
+        document.getElementById('details').scrollIntoView({ behavior: 'smooth' });
+        hideDayPopup();
+      });
+      const clear = document.createElement('button');
+      clear.type = 'button';
+      clear.textContent = 'Clear focus';
+      clear.addEventListener('click', () => {
+        clearDayFocus();
+      });
+      actions.appendChild(view);
+      actions.appendChild(clear);
+      dayPopup.appendChild(actions);
+
+      const rect = cell.getBoundingClientRect();
+      const top = window.scrollY + rect.top - dayPopup.offsetHeight - 12;
+      const left = window.scrollX + rect.left + rect.width + 12;
+      dayPopup.style.top = `${Math.max(top, window.scrollY + 16)}px`;
+      dayPopup.style.left = `${Math.min(left, window.scrollX + window.innerWidth - 260)}px`;
+    }
+
+    function hideDayPopup() {
+      dayPopup.style.display = 'none';
+      dayPopup.innerHTML = '';
+    }
 
     function levelFor(count) {
       if (count === 0) return 0;
@@ -500,10 +929,30 @@
           cell.classList.add('level-' + levelFor(count));
         }
         if (inYear) {
-          cell.addEventListener('click', () => {
+          cell.addEventListener('click', (event) => {
+            event.stopPropagation();
             renderDetails(dateStr);
-            location.hash = '#details';
-            document.getElementById('details').scrollIntoView({ behavior: 'smooth' });
+            setDayFocus(dateStr);
+            showDayPopup(cell, dateStr);
+          });
+          cell.addEventListener('mouseenter', (event) => {
+            if (currentRepoFilter || dayFocus) return;
+            const dateProjects = Array.from(repoByDate.get(dateStr) || []);
+            if (dateProjects.length === 0) return;
+            const countText = `${dateStr}: ${count} commit${count === 1 ? '' : 's'}`;
+            const list = dateProjects.sort().map((p) => `<li>${p}</li>`).join('');
+            tooltip.innerHTML = `<div>${countText}</div><ul>${list}</ul>`;
+            tooltip.classList.add('visible');
+            tooltip.style.top = `${event.pageY + 12}px`;
+            tooltip.style.left = `${event.pageX + 12}px`;
+          });
+          cell.addEventListener('mousemove', (event) => {
+            if (!tooltip.classList.contains('visible')) return;
+            tooltip.style.top = `${event.pageY + 12}px`;
+            tooltip.style.left = `${event.pageX + 12}px`;
+          });
+          cell.addEventListener('mouseleave', () => {
+            tooltip.classList.remove('visible');
           });
         }
         grid.appendChild(cell);
@@ -520,7 +969,6 @@
         years.add(parseInt(key.slice(0, 4), 10));
       }
       const sorted = Array.from(years).sort((a, b) => a - b);
-      const heatmapContainer = document.getElementById('heatmap-container');
       heatmapContainer.innerHTML = '';
 
       if (!sorted.length) {
@@ -566,8 +1014,11 @@
 
           const header = document.createElement('div');
           header.className = 'repo-title';
-          const name = document.createElement('span');
+          const name = document.createElement('button');
+          name.type = 'button';
+          name.className = 'repo-filter';
           name.textContent = item.repo_name;
+          name.addEventListener('click', () => applyRepoFilter(item.repo_name));
           header.appendChild(name);
 
           if (item.repo_is_private) {
@@ -648,7 +1099,12 @@
         const card = document.createElement('div');
         card.className = 'repo-card stagger';
         const title = document.createElement('h3');
-        title.textContent = repo.name;
+        const titleButton = document.createElement('button');
+        titleButton.type = 'button';
+        titleButton.className = 'repo-filter';
+        titleButton.textContent = repo.name;
+        titleButton.addEventListener('click', () => applyRepoFilter(repo.name));
+        title.appendChild(titleButton);
         const meta = document.createElement('div');
         meta.className = 'commit-meta';
         const sizeParts = [];
@@ -689,7 +1145,12 @@
         const card = document.createElement('div');
         card.className = 'repo-card stagger';
         const title = document.createElement('h3');
-        title.textContent = repo.name;
+        const titleButton = document.createElement('button');
+        titleButton.type = 'button';
+        titleButton.className = 'repo-filter';
+        titleButton.textContent = repo.name;
+        titleButton.addEventListener('click', () => applyRepoFilter(repo.name));
+        title.appendChild(titleButton);
         const meta = document.createElement('div');
         meta.className = 'commit-meta';
         const sizeParts = [];
@@ -729,6 +1190,18 @@
 
     renderHeatmap();
     renderRepos();
+
+    filterClear.addEventListener('click', () => {
+      clearRepoFilter();
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!dayFocus) return;
+      if (event.target.closest('#day-popup')) return;
+      if (event.target.classList.contains('day-cell')) return;
+      if (event.target.closest('.repo-filter')) return;
+      clearDayFocus();
+    });
 
     document.getElementById('detail-title').addEventListener('click', (event) => {
       if (!currentDateStr) return;

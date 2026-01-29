@@ -73,3 +73,31 @@ The dashboard files were moved into an `Overview/` folder while repos stayed at 
 ### Consequences
 - Local repo links work again from `Overview/index.html`.
 - Data files now reflect the new relative paths for any downstream use.
+
+## ADR-06
+
+### Context
+A project-level focus mode was requested to visually isolate commit days for a selected repository.
+
+### Decision
+- Add a repository filter mode that highlights only the selected repo's commit days and dims all others.
+- Provide a clear, persistent "Clear filter" control and auto-scroll to the earliest year with commits for that repo.
+- Make repo names clickable in both Day Details and Repositories to activate the filter.
+
+### Consequences
+- Users can quickly isolate a single project's activity timeline without losing the full heatmap view.
+- The UI now maintains an explicit filter state with a visible dismissal control.
+
+## ADR-07
+
+### Context
+A project-focused visualization mode was requested to highlight all days for selected repositories with distinct colors and provide a day-level project popup.
+
+### Decision
+- Add a day-focus mode that assigns stable colors per project using a simple graph coloring pass (no same-color collisions for co-occurring projects when the palette allows).
+- Show a day popup on square click listing projects with color swatches and actions (view commits, clear focus).
+- Add hover tooltips in the unfiltered view that list per-day projects under the commit count.
+
+### Consequences
+- The heatmap can now display multi-project days using conic gradients (pie-like color wedges).
+- If more unique co-occurring projects appear than the palette supports, colors may reuse on non-overlapping projects; a note is displayed.
