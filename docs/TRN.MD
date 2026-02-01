@@ -130,3 +130,35 @@ build it if you can. describe limitations if any where appropriate. update the u
 - Added hover tooltips in unfiltered view with commit counts and per-day project lists.
 - Implemented day-focus mode with project color highlighting, conic gradients for multi-project days, and a popup with actions.
 - Added ADR-07, RUN-09, and TRN-09 entries.
+
+## TRN-10
+
+### Prompt (verbatim)
+
+```
+what's best practice with vscode folder?
+overall quite good. just, when there is a popup, i want to be able to click the project name to see the commits for that project. right now when there's two+ projects, and i click view commits, it's not clear which (or both?!) are being seleced. i want to be able to clearly click one project and highlight those particular commit days.
+update markdowns, transcribe, etc.
+```
+
+### Actions Taken (summary)
+- Added project-name buttons in the day popup that apply the repo filter and show project-specific commits.
+- Clarified the popup action label to "View all commits".
+- Appended ADR-08, RUN-10, and TRN-10 entries.
+
+## TRN-11
+
+### Prompt (verbatim)
+
+```
+OK so put a gitignore or whatever so I can stop seeing VS code come up as uncommitted unclean. 
+
+in the pop up when I click the project it currently jumps down to the end of individual commits. That's not what I want. Instead I'd rather you snap to the beginning of first year in which commits exist. 
+
+update markdowns.
+```
+
+### Actions Taken (summary)
+- Added `.gitignore` entry to ignore `.vscode/`.
+- Updated the popup project click action to filter and scroll to the earliest year with commits instead of jumping to details.
+- Appended ADR-09, RUN-11, and TRN-11 entries.

@@ -150,3 +150,33 @@
 
 ### Feedback / Suggestions
 - If the maximum projects-per-day exceeds the palette, we can extend the palette or switch to patterned overlays.
+
+## RUN-10
+
+### Session Notes
+- Added project-specific actions in the day popup to filter and show commits for one repo.
+- Updated wording to reduce ambiguity when viewing all commits for a day.
+
+### What Worked
+- Reusing the existing repo filter keeps the UI consistent across views.
+
+### What Was Tricky
+- None.
+
+### Feedback / Suggestions
+- If you want an "Esc to clear" shortcut for day focus and filters, I can add it.
+
+## RUN-11
+
+### Session Notes
+- Added `.gitignore` to suppress `.vscode/` noise.
+- Adjusted project-click behavior in the day popup to keep focus on the heatmap.
+
+### What Worked
+- Repo filter already supports auto-scrolling to the earliest year, so reuse was straightforward.
+
+### What Was Tricky
+- None.
+
+### Feedback / Suggestions
+- If you want a one-click jump to details from the popup, we can add a separate action.

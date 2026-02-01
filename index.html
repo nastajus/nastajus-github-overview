@@ -409,6 +409,20 @@
       font-size: 0.9rem;
     }
 
+    .day-popup button.project-link {
+      border: none;
+      background: transparent;
+      color: var(--ink);
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .day-popup button.project-link:hover {
+      color: var(--accent-2);
+    }
+
     .swatch {
       width: 12px;
       height: 12px;
@@ -827,12 +841,23 @@
         swatch.className = 'swatch';
         swatch.style.background = dayFocusColors.get(project) || '#f6e96b';
         li.appendChild(swatch);
-        const label = document.createElement('span');
+        const label = document.createElement('button');
+        label.type = 'button';
+        label.className = 'project-link';
         label.textContent = project;
+        label.addEventListener('click', () => {
+          applyRepoFilter(project);
+          hideDayPopup();
+        });
         li.appendChild(label);
         list.appendChild(li);
       });
       dayPopup.appendChild(list);
+
+      const hint = document.createElement('div');
+      hint.className = 'commit-meta';
+      hint.textContent = 'Click a project to filter and view its commits.';
+      dayPopup.appendChild(hint);
 
       if (colorConflicts) {
         const note = document.createElement('div');
@@ -846,7 +871,7 @@
       const view = document.createElement('button');
       view.type = 'button';
       view.className = 'primary';
-      view.textContent = 'View commits';
+      view.textContent = 'View all commits';
       view.addEventListener('click', () => {
         renderDetails(dateStr);
         location.hash = '#details';
@@ -983,8 +1008,9 @@
       }
     }
 
-    function renderDetails(dateStr) {
+    function renderDetails(dateStr, repoFilter = null) {
       const list = commitMap.get(dateStr) || [];
+      const filteredList = repoFilter ? list.filter((item) => item.repo_name === repoFilter) : list;
       const title = document.getElementById('detail-title');
       const meta = document.getElementById('detail-meta');
       const container = document.getElementById('commit-list');
@@ -997,10 +1023,20 @@
         return;
       }
 
-      const sorted = [...list].sort((a, b) => a.commit_date.localeCompare(b.commit_date));
+      if (repoFilter && filteredList.length === 0) {
+        meta.textContent = `0 commits for ${repoFilter}`;
+        container.textContent = 'No commits for that project on this day.';
+        return;
+      }
+
+      const sorted = [...filteredList].sort((a, b) => a.commit_date.localeCompare(b.commit_date));
 
       const repoCount = new Set(sorted.map(item => item.repo_name)).size;
-      meta.textContent = `${list.length} commit${list.length === 1 ? '' : 's'} across ${repoCount} repo${repoCount === 1 ? '' : 's'}`;
+      if (repoFilter) {
+        meta.textContent = `${sorted.length} commit${sorted.length === 1 ? '' : 's'} for ${repoFilter}`;
+      } else {
+        meta.textContent = `${list.length} commit${list.length === 1 ? '' : 's'} across ${repoCount} repo${repoCount === 1 ? '' : 's'}`;
+      }
       container.innerHTML = '';
 
       let currentRepo = null;

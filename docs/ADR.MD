@@ -101,3 +101,28 @@ A project-focused visualization mode was requested to highlight all days for sel
 ### Consequences
 - The heatmap can now display multi-project days using conic gradients (pie-like color wedges).
 - If more unique co-occurring projects appear than the palette supports, colors may reuse on non-overlapping projects; a note is displayed.
+
+## ADR-08
+
+### Context
+The day popup needed clearer project-specific actions, so selecting a project would filter the heatmap and show commits for that repo.
+
+### Decision
+- Make project names in the day popup clickable, applying the repo filter and rendering day details scoped to that project.
+- Keep a separate "View all commits" action for the full-day list.
+
+### Consequences
+- Users can drill into a single project directly from the popup without ambiguity.
+
+## ADR-09
+
+### Context
+VS Code workspace metadata should not show up as uncommitted noise, and project-click actions in the day popup should focus the heatmap instead of jumping to commit details.
+
+### Decision
+- Add `.vscode/` to `.gitignore` in the Overview repo.
+- When clicking a project in the day popup, apply the repo filter and auto-scroll to the earliest year with commits, without jumping to the commit list.
+
+### Consequences
+- VS Code settings no longer appear as untracked changes.
+- Project selection keeps users focused on the heatmap overview first.
