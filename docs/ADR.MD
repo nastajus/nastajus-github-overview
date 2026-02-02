@@ -234,3 +234,14 @@ The darkest job colors proved too heavy on the heatmap; SL | eONE also needed a 
 
 ### Consequences
 - Employment blocks are brighter and better differentiated on the dark background.
+
+## ADR-19
+
+### Context
+Paymentus needed a less green, more blue hue and SL | eONE needed a darker purple while keeping TF unchanged.
+
+### Decision
+- Use Set A Paymentus blue (#0B2F6B) and Set A Secret Location purple (#7F768A) for the work-range fills.
+
+### Consequences
+- Paymentus now reads more blue; SL is darker and less vibrant, while TF stays the darker purple.

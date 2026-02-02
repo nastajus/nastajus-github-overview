@@ -316,3 +316,18 @@
 
 ### Feedback / Suggestions
 - If TF should be even darker than SL while still lighter than before, we can nudge TF to Set A’s purple next.
+
+## RUN-21
+
+### Session Notes
+- Adjusted Paymentus to a bluer fill (#0B2F6B) to reduce green cast.
+- Darkened SL | eONE to #7F768A while leaving TF unchanged.
+
+### What Worked
+- Set A’s Paymentus and Secret Location swatches offer a cooler, more muted tone on the dark background.
+
+### What Was Tricky
+- Interpreting “darker but still lighter than TF”; I chose a darker SL that remains less saturated than TF.
+
+### Feedback / Suggestions
+- If SL should be brighter than TF instead, I can swap SL to Set B while keeping TF as-is.
