@@ -22,6 +22,10 @@
       --grid-2: #3c7b3f;
       --grid-3: #59a94f;
       --grid-4: #7bd354;
+      --grid-1-gmu: #7a2a2a;
+      --grid-2-gmu: #a03a3a;
+      --grid-3-gmu: #c44b4b;
+      --grid-4-gmu: #e55c5c;
       --cell: 14px;
       --gap: 4px;
       --radius: 14px;
@@ -161,6 +165,29 @@
       font-weight: 600;
     }
 
+    .filter-pill .origin-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .origin-tag.gmu {
+      background: rgba(229, 92, 92, 0.2);
+      color: #ffb3b3;
+    }
+
+    .origin-tag.user {
+      background: rgba(123, 211, 84, 0.2);
+      color: #b9f2a2;
+    }
+
     .filter-clear {
       border: none;
       background: #ffe58a;
@@ -227,6 +254,10 @@
     .day-cell.level-2 { background: var(--grid-2); }
     .day-cell.level-3 { background: var(--grid-3); }
     .day-cell.level-4 { background: var(--grid-4); }
+    .day-cell.level-1.gmu { background: var(--grid-1-gmu); }
+    .day-cell.level-2.gmu { background: var(--grid-2-gmu); }
+    .day-cell.level-3.gmu { background: var(--grid-3-gmu); }
+    .day-cell.level-4.gmu { background: var(--grid-4-gmu); }
     .day-cell.outside { background: #1a231a; opacity: 0.35; cursor: default; }
     .day-cell.flash {
       animation: pulse 1.2s ease;
@@ -253,6 +284,17 @@
 
     .heatmap.filtered .day-cell.highlight:hover {
       animation: glow 0.8s ease-in-out infinite;
+    }
+
+    .heatmap.origin-filter .day-cell {
+      background: #1a1f1a;
+      opacity: 0.5;
+    }
+
+    .heatmap.origin-filter .day-cell.origin-highlight {
+      opacity: 1;
+      outline: 2px solid rgba(255, 255, 255, 0.45);
+      outline-offset: 2px;
     }
 
     .heatmap.day-focus .day-cell {
@@ -521,6 +563,34 @@
       letter-spacing: 0.04em;
     }
 
+    .repo-title-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .origin-label {
+      font-family: "Oswald", sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+    }
+
+    .origin-label.gmu {
+      color: #ffb3b3;
+      background: rgba(229, 92, 92, 0.25);
+    }
+
+    .origin-label.user {
+      color: #b9f2a2;
+      background: rgba(123, 211, 84, 0.2);
+    }
+
     .repo-links {
       display: flex;
       gap: 10px;
@@ -594,7 +664,7 @@
       <h2>All Years Heatmap</h2>
       <div class="heatmap-controls">
         <div id="filter-pill" class="filter-pill" style="display: none;">
-          Filtered by project: <strong id="filter-name"></strong>
+          Filtered: <strong id="filter-name"></strong>
         </div>
         <button id="filter-clear" class="filter-clear" style="display: none;">Clear filter</button>
       </div>
@@ -604,6 +674,7 @@
         <span style="background: var(--grid-2);"></span> medium
         <span style="background: var(--grid-3);"></span> high
         <span style="background: var(--grid-4);"></span> intense
+        <span style="background: var(--grid-2-gmu);"></span> GMU
       </div>
       <div id="heatmap-container" class="heatmap"></div>
     </section>
@@ -657,7 +728,11 @@
     const counts = [];
     const repoDateMap = new Map();
     const repoByDate = new Map();
+    const originByDate = new Map();
+    const originCountByDate = new Map();
+    const repoOriginMap = new Map();
     let currentRepoFilter = null;
+    let currentOriginFilter = null;
     let dayFocus = null;
     let dayFocusProjects = [];
     let dayFocusColors = new Map();
@@ -674,6 +749,16 @@
 
       if (!repoByDate.has(key)) repoByDate.set(key, new Set());
       repoByDate.get(key).add(c.repo_name);
+
+      const originLabel = c.repo_origin_label || 'Nastajus';
+      if (!originByDate.has(key)) originByDate.set(key, new Set());
+      originByDate.get(key).add(originLabel);
+
+      if (!originCountByDate.has(key)) originCountByDate.set(key, new Map());
+      const countMap = originCountByDate.get(key);
+      countMap.set(originLabel, (countMap.get(originLabel) || 0) + 1);
+
+      if (!repoOriginMap.has(c.repo_name)) repoOriginMap.set(c.repo_name, originLabel);
     }
 
     for (const [date, list] of commitMap.entries()) {
@@ -696,10 +781,12 @@
     projectColors = buildProjectColorMap();
 
     function applyRepoFilter(repoName) {
+      clearOriginFilter();
       clearDayFocus();
       currentRepoFilter = repoName;
       const dates = repoDateMap.get(repoName) || new Set();
       filterName.textContent = repoName;
+      filterName.appendChild(buildOriginTag(repoName));
       filterPill.style.display = 'inline-flex';
       filterClear.style.display = 'inline-flex';
       heatmapContainer.classList.add('filtered');
@@ -729,10 +816,66 @@
       currentRepoFilter = null;
       filterPill.style.display = 'none';
       filterClear.style.display = 'none';
+      filterName.innerHTML = '';
       heatmapContainer.classList.remove('filtered');
       document.querySelectorAll('.day-cell.highlight').forEach((cell) => {
         cell.classList.remove('highlight');
       });
+    }
+
+    function applyOriginFilter(originLabel) {
+      if (currentOriginFilter === originLabel) {
+        clearOriginFilter();
+        return;
+      }
+      clearRepoFilter();
+      clearDayFocus();
+      currentOriginFilter = originLabel;
+      filterName.textContent = 'Origin';
+      const tag = document.createElement('span');
+      tag.className = `origin-tag ${originLabel === 'GMU' ? 'gmu' : 'user'}`;
+      tag.textContent = originLabel;
+      filterName.appendChild(tag);
+      filterPill.style.display = 'inline-flex';
+      filterClear.style.display = 'inline-flex';
+      heatmapContainer.classList.add('origin-filter');
+
+      document.querySelectorAll('.day-cell').forEach((cell) => {
+        if (cell.classList.contains('outside')) return;
+        const origins = originByDate.get(cell.dataset.date);
+        if (origins && origins.has(originLabel)) {
+          cell.classList.add('origin-highlight');
+        } else {
+          cell.classList.remove('origin-highlight');
+        }
+      });
+
+      document.querySelectorAll('.repo-card').forEach((card) => {
+        const origin = card.dataset.origin;
+        card.style.display = origin === originLabel ? '' : 'none';
+      });
+    }
+
+    function clearOriginFilter() {
+      currentOriginFilter = null;
+      heatmapContainer.classList.remove('origin-filter');
+      filterPill.style.display = 'none';
+      filterClear.style.display = 'none';
+      filterName.innerHTML = '';
+      document.querySelectorAll('.day-cell.origin-highlight').forEach((cell) => {
+        cell.classList.remove('origin-highlight');
+      });
+      document.querySelectorAll('.repo-card').forEach((card) => {
+        card.style.display = '';
+      });
+    }
+
+    function buildOriginTag(repoName) {
+      const origin = repoOriginMap.get(repoName) || 'Nastajus';
+      const tag = document.createElement('span');
+      tag.className = `origin-tag ${origin === 'GMU' ? 'gmu' : 'user'}`;
+      tag.textContent = origin;
+      return tag;
     }
 
     function buildProjectColorMap() {
@@ -944,14 +1087,21 @@
         const dateStr = date.toISOString().slice(0, 10);
         const inYear = date >= start && date <= end;
         const count = inYear && commitMap.has(dateStr) ? commitMap.get(dateStr).length : 0;
+        const originCounts = originCountByDate.get(dateStr) || new Map();
+        const gmuCount = originCounts.get('GMU') || 0;
+        const userCount = originCounts.get('Nastajus') || 0;
+        const levelBase = gmuCount > 0 ? gmuCount : count;
         const cell = document.createElement('div');
         cell.className = 'day-cell';
         cell.dataset.date = dateStr;
         cell.title = `${dateStr}: ${count} commit${count === 1 ? '' : 's'}`;
         if (!inYear) {
           cell.classList.add('outside');
-        } else if (count > 0) {
-          cell.classList.add('level-' + levelFor(count));
+        } else if (levelBase > 0) {
+          cell.classList.add('level-' + levelFor(levelBase));
+          if (gmuCount > 0) {
+            cell.classList.add('gmu');
+          }
         }
         if (inYear) {
           cell.addEventListener('click', (event) => {
@@ -961,7 +1111,7 @@
             showDayPopup(cell, dateStr);
           });
           cell.addEventListener('mouseenter', (event) => {
-            if (currentRepoFilter || dayFocus) return;
+            if (currentRepoFilter || currentOriginFilter || dayFocus) return;
             const dateProjects = Array.from(repoByDate.get(dateStr) || []);
             if (dateProjects.length === 0) return;
             const countText = `${dateStr}: ${count} commit${count === 1 ? '' : 's'}`;
@@ -1134,13 +1284,25 @@
       for (const repo of sorted) {
         const card = document.createElement('div');
         card.className = 'repo-card stagger';
+        card.dataset.origin = repo.origin_label;
         const title = document.createElement('h3');
+        const titleLine = document.createElement('div');
+        titleLine.className = 'repo-title-line';
         const titleButton = document.createElement('button');
         titleButton.type = 'button';
         titleButton.className = 'repo-filter';
-        titleButton.textContent = repo.name;
+        titleButton.textContent = repo.origin_label === 'GMU' ? `GMU / ${repo.name}` : repo.name;
         titleButton.addEventListener('click', () => applyRepoFilter(repo.name));
-        title.appendChild(titleButton);
+        const origin = document.createElement('span');
+        origin.className = `origin-label ${repo.origin_label === 'GMU' ? 'gmu' : 'user'}`;
+        origin.textContent = repo.origin_label;
+        origin.addEventListener('click', (event) => {
+          event.stopPropagation();
+          applyOriginFilter(repo.origin_label);
+        });
+        titleLine.appendChild(titleButton);
+        titleLine.appendChild(origin);
+        title.appendChild(titleLine);
         const meta = document.createElement('div');
         meta.className = 'commit-meta';
         const sizeParts = [];
@@ -1180,13 +1342,25 @@
       for (const repo of sortedForks) {
         const card = document.createElement('div');
         card.className = 'repo-card stagger';
+        card.dataset.origin = repo.origin_label;
         const title = document.createElement('h3');
+        const titleLine = document.createElement('div');
+        titleLine.className = 'repo-title-line';
         const titleButton = document.createElement('button');
         titleButton.type = 'button';
         titleButton.className = 'repo-filter';
-        titleButton.textContent = repo.name;
+        titleButton.textContent = repo.origin_label === 'GMU' ? `GMU / ${repo.name}` : repo.name;
         titleButton.addEventListener('click', () => applyRepoFilter(repo.name));
-        title.appendChild(titleButton);
+        const origin = document.createElement('span');
+        origin.className = `origin-label ${repo.origin_label === 'GMU' ? 'gmu' : 'user'}`;
+        origin.textContent = repo.origin_label;
+        origin.addEventListener('click', (event) => {
+          event.stopPropagation();
+          applyOriginFilter(repo.origin_label);
+        });
+        titleLine.appendChild(titleButton);
+        titleLine.appendChild(origin);
+        title.appendChild(titleLine);
         const meta = document.createElement('div');
         meta.className = 'commit-meta';
         const sizeParts = [];
@@ -1229,6 +1403,7 @@
 
     filterClear.addEventListener('click', () => {
       clearRepoFilter();
+      clearOriginFilter();
     });
 
     document.addEventListener('click', (event) => {

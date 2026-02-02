@@ -28,6 +28,13 @@ there's a large number of unexpected commits filling up most the last 5 years, t
 - Updated `index.html` to add a Forks section and remove forks from the main repo list and contributions.
 - Appended ADR-02 and RUN-02 documentation entries.
 
+### Addendum (WizTree snapshots)
+
+These snapshots capture the initial repository download footprint (pre‑GMU), including a few very large repos removed because they consumed excessive disk space and did not reflect my contributions.
+
+![Initial repo sizes with forks](trn/wiztree-repo-sizes1-with.forks.too!.png)
+![Initial repo sizes without oversized removals](trn/wiztree-repo-sizes2-just.mine.mainly.png)
+
 ## TRN-03
 
 ### Prompt (verbatim)
@@ -162,3 +169,55 @@ update markdowns.
 - Added `.gitignore` entry to ignore `.vscode/`.
 - Updated the popup project click action to filter and scroll to the earliest year with commits instead of jumping to details.
 - Appended ADR-09, RUN-11, and TRN-11 entries.
+
+## TRN-12
+
+### Prompt (verbatim)
+
+```
+there's a github org at GameMakersUnion that has a majority of repos by me, perhaps all created by me, i'm unsure. i want those all downloaded into a folder [GMU] i've created. I want you to download all of the repositories there, at ../repos/[GMU] .  (1) I then want you to do the same kind of analysis on all of these commits, like he did the first time for my own personal account Nastajus, but on these new GMU ones. i want the data files updated to clearly distinguish the origin account. i see some have an owner field. i leave the semantics up to you.  the point is to clearlye easily ensure origin is identifyiable.  (2) I then want the commit history checkerboard to be updated to include these new entries, however, I need to ensure that visually distinct. use a pleasing shade of red to denote GMU squares, in place of the default green. it should have shades like the green does too to indicate frequency of commits or whatever. ensure it doesn't conflict by being too close to the selected colours. furthermore I want all projects to  clear distinguishing label with colours in the repository list in the index file to include them as well.  such as GMU / project, or project `GMU` in repo title line.  the GMU portion should be clickable such that it highlights and filters all GMU originating projects, and then I guess clicking it again can undo the filter and show everything again in the repositories list and the checkerboard.  
+
+update appropriate markdowns. Commit new changes from this prompt. 
+```
+
+### Actions Taken (summary)
+- Cloned all GameMakersUnion repos into `../repos/[GMU]/`.
+- Regenerated data files to include GMU commits with origin metadata fields.
+- Updated the heatmap to show GMU days in a red scale and added origin filter controls in the repo list.
+- Appended ADR-10, RUN-12, and TRN-12 entries.
+
+## TRN-13
+
+### Prompt (verbatim)
+
+```
+so for these two unexpected PNG files, I want you to create a new section at the end of TRN-02 and embed these images. they're generated from Wiz tree. briefly summarize their contents overview in the TRN-02 new section. they give an overview of all the downloaded repositories initially, before GMU, With a few of them removed because they were excessively large in file space consumption, and did not reflect any contributions in mine.  
+
+ensure to continue to update markdowns with new relevant entries. Such as this transcription should also be a new Entry reflecting the back filling of an old entry.
+```
+
+### Actions Taken (summary)
+- Added a TRN-02 addendum with WizTree snapshots and a brief summary.
+- Appended this TRN-13 entry to record the backfill request.
+
+## TRN-14
+
+### Prompt (verbatim)
+
+```
+somehow an accidental copy of these images came back to the root level. And I think they became referenced. I deleted them. This broke the TRN.MD references. There should only be a single copy of these repo 1 and repo 2 files inside Overview\docs\trn . Ensure that they remain the only ones. Now rename them prepending with `wiztree-` ensure that the backfilled addendum TRN-02 entry now correctly references these updated named images. 
+
+there is now a new Wiztree 3 file, as well, in the same path, this now reflects total repo sizes of all my personal account repos alongside the organizational account of Game Makers Union. Please create a new TRN entry to summarize the reference to this image as well. Use the same structure as TRN-02, by appending a new section for this image. 
+
+transcribe and commit as normal.
+```
+
+### Actions Taken (summary)
+- Renamed WizTree images with a `wiztree-` prefix and updated TRN-02 addendum paths.
+- Added a new TRN-14 addendum section referencing the combined personal + GMU snapshot.
+
+### WizTree Snapshot (personal + GMU)
+
+This snapshot captures the combined repo size footprint for personal (Nastajus) and GMU repositories.
+
+![Combined personal + GMU repo sizes](trn/wiztree-repo-sizes2-plus-GMU-now.png)

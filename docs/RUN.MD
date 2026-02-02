@@ -180,3 +180,49 @@
 
 ### Feedback / Suggestions
 - If you want a one-click jump to details from the popup, we can add a separate action.
+
+## RUN-12
+
+### Session Notes
+- Added GMU org repos under `../repos/[GMU]/` and included their commit history in the data.
+- Added origin metadata to repo and commit records.
+- Implemented a GMU heatmap color scale and origin-level filters in the repo list.
+
+### What Worked
+- Origin metadata makes filtering and labeling straightforward in the UI.
+
+### What Was Tricky
+- Mixed-origin days currently render in the GMU scale for visual clarity.
+
+### Feedback / Suggestions
+- If you want mixed-origin days to show a blended indicator, we can add a dual-color overlay.
+
+## RUN-13
+
+### Session Notes
+- Backfilled TRN-02 with WizTree snapshot images and a brief summary.
+- Logged the backfill request as TRN-13 and added ADR-11.
+
+### What Worked
+- Relative paths from `docs/` correctly reference the images in the Overview root.
+
+### What Was Tricky
+- None.
+
+### Feedback / Suggestions
+- If you want thumbnails instead of full-size embeds, I can add size-constrained HTML tags.
+
+## RUN-14
+
+### Session Notes
+- Renamed WizTree images with a `wiztree-` prefix and kept them only under `docs/trn/`.
+- Updated TRN-02 addendum references and added a new combined personal + GMU snapshot entry.
+
+### What Worked
+- Centralizing images under `docs/trn/` keeps TRN references consistent.
+
+### What Was Tricky
+- None.
+
+### Feedback / Suggestions
+- If you add future WizTree snapshots, place them under `docs/trn/` to keep links stable.

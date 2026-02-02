@@ -126,3 +126,40 @@ VS Code workspace metadata should not show up as uncommitted noise, and project-
 ### Consequences
 - VS Code settings no longer appear as untracked changes.
 - Project selection keeps users focused on the heatmap overview first.
+
+## ADR-10
+
+### Context
+GMU organization repositories needed to be integrated into the dashboard with clear visual distinction and filtering.
+
+### Decision
+- Clone GMU repos into `../repos/[GMU]/` and include their commit history in the aggregated data.
+- Add origin metadata (`origin_label`, `origin_type`) to repos and commits for filtering and display.
+- Render GMU commit days with a red heatmap scale and allow origin-level filtering from the repo list.
+
+### Consequences
+- Days with GMU commits are visually distinct (red scale). Mixed-origin days currently render in GMU red to preserve clarity.
+- Repo list includes origin labels that toggle an origin-wide filter on the heatmap and list.
+
+## ADR-11
+
+### Context
+Two WizTree PNG snapshots needed to be embedded retroactively into TRN-02 to preserve original storage context.
+
+### Decision
+- Backfill TRN-02 with an addendum and embedded images (relative to `docs/`).
+
+### Consequences
+- TRN-02 now includes historical storage context without altering the original prompt text.
+
+## ADR-12
+
+### Context
+WizTree snapshots were relocated under `docs/trn/` and renamed with a `wiztree-` prefix to avoid root-level duplicates and broken references.
+
+### Decision
+- Store all WizTree images only in `Overview/docs/trn/` and reference them from TRN.
+- Update TRN-02 addendum and add a new TRN entry for the combined personal + GMU snapshot.
+
+### Consequences
+- Image references are now stable and scoped to the TRN documentation area.
