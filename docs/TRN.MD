@@ -306,3 +306,16 @@ describe precisely how you end up selecting the colours you do, and write this i
 - Embedded the job color reference image.
 
 ![Job color reference](trn/job-colors.png)
+
+## TRN-20
+
+### Prompt (verbatim)
+
+```
+it turns out the darkest choice of three of the four jobs is bad. two jobs Paymentus and TF is way too dark, find the lightest instead of them. i'm referring to the box colors.   as for SL, it's too vibrant, too blue even. there should be a shade of dark purple or pastel purple you should be able to find there. again this is all referring none box colours.  
+
+the text selections are actually pretty good. You can keep those. but I need three of the background none box colours to be corrected. I think two of them just need to be lighter, paymentus and TF. but one of them, SL, idk how you picked blue even. it should be a shade of purple, similar to TF but different somehow. the SL shade should be lighter purple, the TF shade should be darker purple. Please try reanalyzing again and try to isolate better unique and consistent shades for the background none boxes.
+```
+
+### Actions Taken (summary)
+- Updated work-range box colors: Paymentus to a lighter blue, SL | eONE to a pastel purple, and TF to a darker purple.

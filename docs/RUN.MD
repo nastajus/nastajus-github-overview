@@ -301,3 +301,18 @@
 
 ### Feedback / Suggestions
 - If you want the legend text to match each square exactly, we can switch to Set C for text too.
+
+## RUN-20
+
+### Session Notes
+- Adjusted work-range box colors using the palette reference: Paymentus uses Set B blue (#103A8C), SL | eONE uses Set B purple (#8A7F99), and TF uses Set B purple (#7B5CFF).
+- Kept legend text colors unchanged as requested.
+
+### What Worked
+- Picking from the Set B row gave lighter, more legible fills while maintaining distinct hues.
+
+### What Was Tricky
+- Balancing SL and TF as distinct purples without making either too dark.
+
+### Feedback / Suggestions
+- If TF should be even darker than SL while still lighter than before, we can nudge TF to Set A’s purple next.

@@ -223,3 +223,14 @@ Work-range colors needed to follow a provided palette with dark UI-friendly squa
 
 ### Consequences
 - Work-range squares are distinct and readable in the heatmap; legend text remains high-contrast.
+
+## ADR-18
+
+### Context
+The darkest job colors proved too heavy on the heatmap; SL | eONE also needed a purple (not blue) hue.
+
+### Decision
+- Move Paymentus, SL | eONE, and TF box colors to lighter Set B hues while keeping legend text as-is.
+
+### Consequences
+- Employment blocks are brighter and better differentiated on the dark background.
