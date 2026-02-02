@@ -717,10 +717,9 @@
     <section id="legend-info">
       <h2>Heatmap Scale</h2>
       <div class="commit-meta">
-        The color scale is dynamic: each day is bucketed into 4 levels based on its commit count
-        relative to the maximum commit count found across all days in the dataset. GMU days use the
-        GMU-only count for their level; otherwise the total count is used. Year totals include both
-        personal and GMU commits.
+        The color scale is dynamic: each day is bucketed into 4 levels based on its total commit
+        count relative to the maximum commit count found across all days in the dataset. GMU days
+        use the same global scale as personal days. Year totals include both personal and GMU commits.
       </div>
     </section>
   </main>
@@ -1100,7 +1099,7 @@
         const originCounts = originCountByDate.get(dateStr) || new Map();
         const gmuCount = originCounts.get('GMU') || 0;
         const userCount = originCounts.get('Nastajus') || 0;
-        const levelBase = gmuCount > 0 ? gmuCount : count;
+        const levelBase = count;
         const cell = document.createElement('div');
         cell.className = 'day-cell';
         cell.dataset.date = dateStr;

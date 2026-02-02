@@ -241,3 +241,18 @@
 
 ### Feedback / Suggestions
 - If you want absolute bucket thresholds, we can add a fixed legend with numeric ranges.
+
+## RUN-16
+
+### Session Notes
+- Aligned GMU and personal heatmap levels to the same global daily commit scale.
+- Updated the Heatmap Scale copy to match the new behavior.
+
+### What Worked
+- Level calculation change was isolated to the day rendering path.
+
+### What Was Tricky
+- None.
+
+### Feedback / Suggestions
+- If you want a per-origin toggle, we can add it as an optional view mode.

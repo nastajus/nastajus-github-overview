@@ -236,4 +236,16 @@ transcribe and commit as usual.
 
 ### Actions Taken (summary)
 - Added a Heatmap Scale section clarifying that yearly totals include both personal + GMU commits.
-- Explained that day colors are based on a dynamic, dataset-relative scale and that GMU days use GMU-only counts.
+- Explained that day colors are based on a dynamic, dataset-relative scale shared across personal and GMU commits.
+
+## TRN-16
+
+### Prompt (verbatim)
+
+```
+you mention  GMU-only count for their level.  I would rather all commit colour encodings use the same global reference instead. the reason I noticed this is that the red ones seem two similar in 2016, for example on date  2016-08-22 i expected brighter red but didn't see any difference with the 1/5 volume commits on adjacent days. please fix
+```
+
+### Actions Taken (summary)
+- Switched GMU day level calculations to use the same global commit count scale.
+- Updated the Heatmap Scale explanation accordingly.

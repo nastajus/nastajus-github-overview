@@ -174,3 +174,14 @@ Clarity was needed on whether yearly totals include GMU + personal commits and h
 
 ### Consequences
 - The heatmap now documents its scale assumptions directly in the UI.
+
+## ADR-14
+
+### Context
+GMU day coloring used GMU-only counts for level selection, which made red intensity appear inconsistent against the global scale.
+
+### Decision
+- Use the same global daily commit count scale for both GMU and personal heatmap levels.
+
+### Consequences
+- Red and green intensities now map to the same global thresholds, improving cross-origin comparability.
