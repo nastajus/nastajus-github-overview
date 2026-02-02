@@ -249,3 +249,19 @@ you mention  GMU-only count for their level.  I would rather all commit colour e
 ### Actions Taken (summary)
 - Switched GMU day level calculations to use the same global commit count scale.
 - Updated the Heatmap Scale explanation accordingly.
+
+## TRN-17
+
+### Prompt (verbatim)
+
+```
+for the years that include commits from both origins, I'd like you to modify the part that says number of commits, such that when you hover over it it shows a pop up with a breakdown of the commits each origin Nastajus and GMU. with a legend icon of their colour as well. 
+
+as for the dynamic calculation of which colours are assigned to which numbers of commits each day, can state what range that currently is, and put that in the end of the index file as well? thanks.  I am suspicious that every entry in 2016 is homogeneously coloured as all the same shade of red. I feel like there should be more range of colours there. I'm trying to prove that somehow.
+
+transcribe and commit as usual. 
+```
+
+### Actions Taken (summary)
+- Added a year-total hover tooltip with origin breakdown (Nastajus vs GMU) and color swatches when both origins exist.
+- Added a dynamic scale readout showing the current commit ranges for each color level.

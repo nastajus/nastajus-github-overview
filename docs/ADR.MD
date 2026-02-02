@@ -185,3 +185,15 @@ GMU day coloring used GMU-only counts for level selection, which made red intens
 
 ### Consequences
 - Red and green intensities now map to the same global thresholds, improving cross-origin comparability.
+
+## ADR-15
+
+### Context
+The yearly totals needed an origin breakdown on hover, and the dynamic heatmap scale needed explicit numeric ranges for verification.
+
+### Decision
+- Add a hover tooltip on yearly totals to show Nastajus vs GMU counts with color swatches.
+- Display the computed level ranges at the end of the page using the current max daily commit count.
+
+### Consequences
+- Users can verify both origin composition and the dynamic scale thresholds directly in the UI.

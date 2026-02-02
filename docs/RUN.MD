@@ -256,3 +256,18 @@
 
 ### Feedback / Suggestions
 - If you want a per-origin toggle, we can add it as an optional view mode.
+
+## RUN-17
+
+### Session Notes
+- Added year-total hover tooltips with origin breakdown and color swatches.
+- Added a dynamic scale range readout based on the current maximum daily commits.
+
+### What Worked
+- Reusing the existing tooltip pattern kept the UI consistent.
+
+### What Was Tricky
+- Ensuring the tooltip only appears when both origins exist for a year.
+
+### Feedback / Suggestions
+- If you want fixed, absolute bucket thresholds, we can add a second legend for that mode.

@@ -228,6 +228,14 @@
       letter-spacing: 0.05em;
     }
 
+    .year-total {
+      font-family: "Oswald", sans-serif;
+      letter-spacing: 0.04em;
+      font-size: 0.9rem;
+      color: var(--muted);
+      cursor: help;
+    }
+
     .year-grid {
       display: grid;
       grid-auto-flow: column;
@@ -417,6 +425,41 @@
 
     .tooltip li {
       margin: 2px 0;
+    }
+
+    .year-tooltip {
+      position: absolute;
+      z-index: 25;
+      background: rgba(15, 20, 15, 0.95);
+      color: var(--ink);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      pointer-events: none;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 120ms ease, transform 120ms ease;
+    }
+
+    .year-tooltip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .year-tooltip ul {
+      list-style: none;
+      padding: 0;
+      margin: 6px 0 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .year-tooltip li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .day-popup {
@@ -721,11 +764,13 @@
         count relative to the maximum commit count found across all days in the dataset. GMU days
         use the same global scale as personal days. Year totals include both personal and GMU commits.
       </div>
+      <div id="scale-info" class="commit-meta" style="margin-top: 8px;"></div>
     </section>
   </main>
 
   <div id="tooltip" class="tooltip"></div>
   <div id="day-popup" class="day-popup" style="display: none;"></div>
+  <div id="year-tooltip" class="year-tooltip"></div>
 
   <script src="data/commits.js"></script>
   <script src="data/repos.js"></script>
@@ -739,6 +784,7 @@
     const repoByDate = new Map();
     const originByDate = new Map();
     const originCountByDate = new Map();
+    const originCountByYear = new Map();
     const repoOriginMap = new Map();
     let currentRepoFilter = null;
     let currentOriginFilter = null;
@@ -767,6 +813,11 @@
       const countMap = originCountByDate.get(key);
       countMap.set(originLabel, (countMap.get(originLabel) || 0) + 1);
 
+      const yearKey = key.slice(0, 4);
+      if (!originCountByYear.has(yearKey)) originCountByYear.set(yearKey, new Map());
+      const yearMap = originCountByYear.get(yearKey);
+      yearMap.set(originLabel, (yearMap.get(originLabel) || 0) + 1);
+
       if (!repoOriginMap.has(c.repo_name)) repoOriginMap.set(c.repo_name, originLabel);
     }
 
@@ -782,6 +833,7 @@
     const filterClear = document.getElementById('filter-clear');
     const tooltip = document.getElementById('tooltip');
     const dayPopup = document.getElementById('day-popup');
+    const yearTooltip = document.getElementById('year-tooltip');
     const palette = [
       '#f6e96b', '#ffb347', '#ff7aa2', '#c97cff', '#7aa2ff', '#5dd4c3',
       '#7bd354', '#f29e4c', '#f94144', '#b8f2e6', '#f1c27a', '#a5a6f6'
@@ -1059,6 +1111,19 @@
       return Math.min(4, Math.max(1, level));
     }
 
+    function getLevelRanges() {
+      if (maxCount === 0) return [];
+      const t1 = Math.floor(maxCount / 4);
+      const t2 = Math.floor(maxCount / 2);
+      const t3 = Math.floor((3 * maxCount) / 4);
+      return [
+        { level: 1, min: 1, max: Math.max(1, t1) },
+        { level: 2, min: Math.max(1, t1 + 1), max: Math.max(t1 + 1, t2) },
+        { level: 3, min: Math.max(1, t2 + 1), max: Math.max(t2 + 1, t3) },
+        { level: 4, min: Math.max(1, t3 + 1), max: maxCount }
+      ];
+    }
+
     function buildYearBlock(year) {
       const container = document.createElement('div');
       container.className = 'year-block stagger';
@@ -1069,11 +1134,46 @@
       const title = document.createElement('h3');
       title.textContent = year;
       const total = document.createElement('div');
-      total.className = 'commit-meta';
+      total.className = 'year-total';
       const yearCount = Array.from(commitMap.keys())
         .filter(d => d.startsWith(year + '-'))
         .reduce((sum, d) => sum + commitMap.get(d).length, 0);
       total.textContent = yearCount + ' commits';
+      total.addEventListener('mouseenter', (event) => {
+        const yearMap = originCountByYear.get(String(year)) || new Map();
+        if (yearMap.size < 2) {
+          yearTooltip.classList.remove('visible');
+          return;
+        }
+        const list = document.createElement('ul');
+        yearMap.forEach((value, key) => {
+          const li = document.createElement('li');
+          const swatch = document.createElement('span');
+          swatch.className = 'swatch';
+          swatch.style.background = key === 'GMU' ? 'var(--grid-3-gmu)' : 'var(--grid-3)';
+          li.appendChild(swatch);
+          const label = document.createElement('span');
+          label.textContent = `${key}: ${value}`;
+          li.appendChild(label);
+          list.appendChild(li);
+        });
+        yearTooltip.innerHTML = '';
+        const title = document.createElement('div');
+        title.textContent = `Origin breakdown (${year})`;
+        yearTooltip.appendChild(title);
+        yearTooltip.appendChild(list);
+        yearTooltip.classList.add('visible');
+        yearTooltip.style.top = `${event.pageY + 12}px`;
+        yearTooltip.style.left = `${event.pageX + 12}px`;
+      });
+      total.addEventListener('mousemove', (event) => {
+        if (!yearTooltip.classList.contains('visible')) return;
+        yearTooltip.style.top = `${event.pageY + 12}px`;
+        yearTooltip.style.left = `${event.pageX + 12}px`;
+      });
+      total.addEventListener('mouseleave', () => {
+        yearTooltip.classList.remove('visible');
+      });
       header.appendChild(title);
       header.appendChild(total);
 
@@ -1414,6 +1514,13 @@
       clearRepoFilter();
       clearOriginFilter();
     });
+
+    const ranges = getLevelRanges();
+    const scaleInfo = document.getElementById('scale-info');
+    if (scaleInfo && ranges.length) {
+      const parts = ranges.map((r) => `L${r.level}: ${r.min}-${r.max}`).join(' | ');
+      scaleInfo.textContent = `Current scale (max daily commits = ${maxCount}): ${parts}`;
+    }
 
     document.addEventListener('click', (event) => {
       if (!dayFocus) return;
