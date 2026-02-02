@@ -271,3 +271,19 @@
 
 ### Feedback / Suggestions
 - If you want fixed, absolute bucket thresholds, we can add a second legend for that mode.
+
+## RUN-18
+
+### Session Notes
+- Added clamped positioning for tooltips and the day popup to avoid right-edge overflow.
+- Added work-range data file and legend with black placeholder squares.
+- Added GMU participation range derived from first/last GMU commits.
+
+### What Worked
+- Clamping after measuring element size keeps popups readable without jitter.
+
+### What Was Tricky
+- Ensuring the popup used a consistent strategy across hover and click cases.
+
+### Feedback / Suggestions
+- If you want distinct company colors, we can apply them per range and update the legend.

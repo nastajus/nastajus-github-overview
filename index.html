@@ -427,6 +427,12 @@
       margin: 2px 0;
     }
 
+    .tooltip.visible,
+    .year-tooltip.visible,
+    .day-popup {
+      max-width: 260px;
+    }
+
     .year-tooltip {
       position: absolute;
       z-index: 25;
@@ -766,6 +772,11 @@
       </div>
       <div id="scale-info" class="commit-meta" style="margin-top: 8px;"></div>
     </section>
+
+    <section id="work-legend">
+      <h2>Employment Ranges</h2>
+      <div id="work-legend-list" class="commit-meta"></div>
+    </section>
   </main>
 
   <div id="tooltip" class="tooltip"></div>
@@ -777,6 +788,21 @@
   <script>
     const commits = window.COMMITS_DATA || [];
     const repos = window.REPOS_DATA || [];
+    let workRanges = [];
+
+    fetch('data/work-ranges.json')
+      .then((res) => res.json())
+      .then((data) => {
+        workRanges = Array.isArray(data) ? data : [];
+        renderHeatmap();
+        updateScaleInfo();
+        renderWorkLegend();
+      })
+      .catch(() => {
+        renderHeatmap();
+        updateScaleInfo();
+        renderWorkLegend();
+      });
 
     const commitMap = new Map();
     const counts = [];
@@ -840,6 +866,41 @@
     ];
 
     projectColors = buildProjectColorMap();
+
+    function clampTooltipPosition(x, y, element) {
+      const rect = element.getBoundingClientRect();
+      const width = rect.width || 240;
+      const height = rect.height || 120;
+      const padding = 12;
+      const maxX = window.scrollX + window.innerWidth - width - padding;
+      const maxY = window.scrollY + window.innerHeight - height - padding;
+      const clampedX = Math.min(Math.max(x, window.scrollX + padding), maxX);
+      const clampedY = Math.min(Math.max(y, window.scrollY + padding), maxY);
+      return { x: clampedX, y: clampedY };
+    }
+
+    function positionFloatingPanel(element, pageX, pageY) {
+      element.style.display = 'block';
+      const { x, y } = clampTooltipPosition(pageX, pageY, element);
+      element.style.left = `${x}px`;
+      element.style.top = `${y}px`;
+    }
+
+    function shouldUseWorkRange(dateStr) {
+      if (!workRanges.length) return false;
+      return workRanges.some((range) => dateStr >= range.start && dateStr <= range.end);
+    }
+
+    function getGmuRange() {
+      const dates = [];
+      for (const [dateStr, origins] of originByDate.entries()) {
+        if (origins.has('GMU')) dates.push(dateStr);
+      }
+      if (!dates.length) return null;
+      dates.sort();
+      return { start: dates[0], end: dates[dates.length - 1] };
+    }
+
 
     function applyRepoFilter(repoName) {
       clearOriginFilter();
@@ -1093,10 +1154,10 @@
       dayPopup.appendChild(actions);
 
       const rect = cell.getBoundingClientRect();
-      const top = window.scrollY + rect.top - dayPopup.offsetHeight - 12;
-      const left = window.scrollX + rect.left + rect.width + 12;
-      dayPopup.style.top = `${Math.max(top, window.scrollY + 16)}px`;
-      dayPopup.style.left = `${Math.min(left, window.scrollX + window.innerWidth - 260)}px`;
+      const preferredX = window.scrollX + rect.left + rect.width + 12;
+      const preferredY = window.scrollY + rect.top - dayPopup.offsetHeight - 12;
+      const safeY = Math.max(preferredY, window.scrollY + 16);
+      positionFloatingPanel(dayPopup, preferredX, safeY);
     }
 
     function hideDayPopup() {
@@ -1163,13 +1224,11 @@
         yearTooltip.appendChild(title);
         yearTooltip.appendChild(list);
         yearTooltip.classList.add('visible');
-        yearTooltip.style.top = `${event.pageY + 12}px`;
-        yearTooltip.style.left = `${event.pageX + 12}px`;
+        positionFloatingPanel(yearTooltip, event.pageX + 12, event.pageY + 12);
       });
       total.addEventListener('mousemove', (event) => {
         if (!yearTooltip.classList.contains('visible')) return;
-        yearTooltip.style.top = `${event.pageY + 12}px`;
-        yearTooltip.style.left = `${event.pageX + 12}px`;
+        positionFloatingPanel(yearTooltip, event.pageX + 12, event.pageY + 12);
       });
       total.addEventListener('mouseleave', () => {
         yearTooltip.classList.remove('visible');
@@ -1211,6 +1270,8 @@
           if (gmuCount > 0) {
             cell.classList.add('gmu');
           }
+        } else if (shouldUseWorkRange(dateStr)) {
+          cell.style.background = '#000000';
         }
         if (inYear) {
           cell.addEventListener('click', (event) => {
@@ -1227,13 +1288,11 @@
             const list = dateProjects.sort().map((p) => `<li>${p}</li>`).join('');
             tooltip.innerHTML = `<div>${countText}</div><ul>${list}</ul>`;
             tooltip.classList.add('visible');
-            tooltip.style.top = `${event.pageY + 12}px`;
-            tooltip.style.left = `${event.pageX + 12}px`;
+            positionFloatingPanel(tooltip, event.pageX + 12, event.pageY + 12);
           });
           cell.addEventListener('mousemove', (event) => {
             if (!tooltip.classList.contains('visible')) return;
-            tooltip.style.top = `${event.pageY + 12}px`;
-            tooltip.style.left = `${event.pageX + 12}px`;
+            positionFloatingPanel(tooltip, event.pageX + 12, event.pageY + 12);
           });
           cell.addEventListener('mouseleave', () => {
             tooltip.classList.remove('visible');
@@ -1515,12 +1574,31 @@
       clearOriginFilter();
     });
 
-    const ranges = getLevelRanges();
-    const scaleInfo = document.getElementById('scale-info');
-    if (scaleInfo && ranges.length) {
-      const parts = ranges.map((r) => `L${r.level}: ${r.min}-${r.max}`).join(' | ');
-      scaleInfo.textContent = `Current scale (max daily commits = ${maxCount}): ${parts}`;
+    function updateScaleInfo() {
+      const ranges = getLevelRanges();
+      const scaleInfo = document.getElementById('scale-info');
+      if (scaleInfo && ranges.length) {
+        const parts = ranges.map((r) => `L${r.level}: ${r.min}-${r.max}`).join(' | ');
+        scaleInfo.textContent = `Current scale (max daily commits = ${maxCount}): ${parts}`;
+      }
     }
+
+    function renderWorkLegend() {
+      const container = document.getElementById('work-legend-list');
+      if (!container) return;
+      const gmuRange = getGmuRange();
+      const lines = workRanges.map((range) => {
+        return `<div><span class="swatch" style="background:#000000;"></span> ${range.name} — ${range.start} to ${range.end}</div>`;
+      });
+      if (gmuRange) {
+        lines.push(`<div><span class="swatch" style="background:var(--grid-2-gmu);"></span> GMU activity — ${gmuRange.start} to ${gmuRange.end}</div>`);
+      }
+      container.innerHTML = lines.join('');
+    }
+
+    const ranges = getLevelRanges();
+    updateScaleInfo();
+    renderWorkLegend();
 
     document.addEventListener('click', (event) => {
       if (!dayFocus) return;

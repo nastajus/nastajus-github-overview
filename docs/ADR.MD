@@ -197,3 +197,17 @@ The yearly totals needed an origin breakdown on hover, and the dynamic heatmap s
 
 ### Consequences
 - Users can verify both origin composition and the dynamic scale thresholds directly in the UI.
+
+## ADR-16
+
+### Context
+Tooltip popups needed to avoid overflowing the right edge, and work-history ranges needed to be represented on the heatmap.
+
+### Decision
+- Clamp tooltip and popup positions to stay within the viewport width.
+- Store employment ranges in `data/work-ranges.json` and mark empty days in those ranges with a placeholder black square.
+- Add a work-range legend and a GMU participation range summary.
+
+### Consequences
+- Popups no longer overflow the right edge.
+- Work ranges are represented visually and documented in the UI.

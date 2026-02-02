@@ -1,0 +1,26 @@
+[
+  {
+    "name": "MOH (Ministry of Health, LTC)",
+    "start": "2011-07-01",
+    "end": "2013-04-30",
+    "color": "#000000"
+  },
+  {
+    "name": "Paymentus",
+    "start": "2014-12-01",
+    "end": "2017-05-31",
+    "color": "#000000"
+  },
+  {
+    "name": "SL | eONE (Secret Location | Entertainment One)",
+    "start": "2018-05-01",
+    "end": "2019-04-30",
+    "color": "#000000"
+  },
+  {
+    "name": "TF (Transitional Forms)",
+    "start": "2020-01-06",
+    "end": "2020-01-27",
+    "color": "#000000"
+  }
+]

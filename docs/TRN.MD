@@ -265,3 +265,28 @@ transcribe and commit as usual.
 ### Actions Taken (summary)
 - Added a year-total hover tooltip with origin breakdown (Nastajus vs GMU) and color swatches when both origins exist.
 - Added a dynamic scale readout showing the current commit ranges for each color level.
+
+## TRN-18
+
+### Prompt (verbatim)
+
+```
+the pop ups for both the mixed commit total number years, as well as the pop ups for the individual commit days , essentially make little to no consideration for going off the right side of the page.  in the former case it squished and unreadable trying to place itself the right side of the mouse cursor, and squishing between that and the right side of the page Browser edge, so it makes it less pleasant to read. in the case of the individual commit day pop-ups, it simply overflows past the border of the page.  I would like these behaviors homogenized to behave the same way.  I think in this case when the mouse is too close to the right side of the page, I would rather the pop up to not align anymore with being to the bottom right of the mouse cursor, but instead be nudged to the left such that the entire pop up at original unresized sized remains fully visible without going over the edge of the browser. Can you do that?  I imagine the possibility of jittering and constantly recalculating would come up. Ideally this would be avoided. I don't know if this is possible. Perhaps you pre calculate the size, I don't know how to do it right off the top of my head. Whatever you implement, describe how it works in learnable entry. 
+
+the following are work dates that I don't have any clear  commit history for. Either it never existed or it was outside my control. I would like to represent these time ranges on history board somehow.  the following is a list of time ranges I worked at various companies. I want you to store this in a file in the data folder.  then I want this data to be used to change the none square colour, to be distinct for each of four companies listed. we can start with just simply making all of those none squares be black. 
+
+MOH (Ministry of Health, LTC) - Jul 2011 to Apr 2013 
+Paymentus -  Dec 2014 - May 2017 · 2 yrs 6 mos
+SL | eONE  (Secret Location | Entertainment One) - May 2018 to Apr 2019 · 1 yr Toronto  
+TF  (Transitional Forms) - Jan 6 to jan 27 2020.
+
+I want a legend of these date ranges to be added to the end of the index page. later they will unique colours assigned. For now you put a copy of a black square to represent as a placeholder for each of the companies. Also extrapolate GMU participation time based on first and last commit, and added to this as well.  for the time being, there will be no background none square coloring to represent GMU, as there is a significant overlap with Paymentus employment .
+
+update markdowns and commit as usual. 
+```
+
+### Actions Taken (summary)
+- Implemented unified popup positioning that clamps tooltips/panels within the viewport.
+- Added `data/work-ranges.json` and rendered black placeholders for empty work-range days.
+- Added a work-range legend with a computed GMU participation range.
+- Documented the positioning strategy and work-range representation.
