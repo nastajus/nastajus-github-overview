@@ -221,3 +221,19 @@ transcribe and commit as normal.
 This snapshot captures the combined repo size footprint for personal (Nastajus) and GMU repositories.
 
 ![Combined personal + GMU repo sizes](trn/wiztree-repo-sizes2-plus-GMU-now.png)
+
+## TRN-15
+
+### Prompt (verbatim)
+
+```
+I don't know if the number of commits in each year reflect the total for both personal account and organization GMU. 
+
+also I'm unclear what colour should correspond to the number of commits for each given day. I don't know if it is dynamic or global. Assuming that they are all identical, can you create a legend at the end of the index page to say what numbers of are using which colours. If it is dynamically changing, write a short explanation of that at the end of the page instead. 
+
+transcribe and commit as usual.
+```
+
+### Actions Taken (summary)
+- Added a Heatmap Scale section clarifying that yearly totals include both personal + GMU commits.
+- Explained that day colors are based on a dynamic, dataset-relative scale and that GMU days use GMU-only counts.

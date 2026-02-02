@@ -226,3 +226,18 @@
 
 ### Feedback / Suggestions
 - If you add future WizTree snapshots, place them under `docs/trn/` to keep links stable.
+
+## RUN-15
+
+### Session Notes
+- Added a Heatmap Scale section explaining dynamic color scaling and origin handling.
+- Clarified that yearly totals include both personal and GMU commits.
+
+### What Worked
+- In-page explanation avoids ambiguity without changing the scale logic.
+
+### What Was Tricky
+- None.
+
+### Feedback / Suggestions
+- If you want absolute bucket thresholds, we can add a fixed legend with numeric ranges.

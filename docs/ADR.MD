@@ -163,3 +163,14 @@ WizTree snapshots were relocated under `docs/trn/` and renamed with a `wiztree-`
 
 ### Consequences
 - Image references are now stable and scoped to the TRN documentation area.
+
+## ADR-13
+
+### Context
+Clarity was needed on whether yearly totals include GMU + personal commits and how heatmap color levels are computed.
+
+### Decision
+- Add an in-page explanation describing the dynamic, dataset-relative color scaling and origin-specific handling.
+
+### Consequences
+- The heatmap now documents its scale assumptions directly in the UI.
