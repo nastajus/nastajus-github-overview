@@ -287,3 +287,17 @@
 
 ### Feedback / Suggestions
 - If you want distinct company colors, we can apply them per range and update the legend.
+
+## RUN-19
+
+### Session Notes
+- Applied Set C (Dark UI) colors to work-range square backgrounds and Set B colors to legend text for contrast.
+
+### What Worked
+- Using the darker Set C swatches keeps the squares visible on the dark heatmap background.
+
+### What Was Tricky
+- Assigning SL | eONE a purple family shade while keeping distinctness; Set C provides the darkest available swatch for that row.
+
+### Feedback / Suggestions
+- If you want the legend text to match each square exactly, we can switch to Set C for text too.

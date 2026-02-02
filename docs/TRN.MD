@@ -290,3 +290,19 @@ update markdowns and commit as usual.
 - Added `data/work-ranges.json` and rendered black placeholders for empty work-range days.
 - Added a work-range legend with a computed GMU participation range.
 - Documented the positioning strategy and work-range representation.
+
+## TRN-19
+
+### Prompt (verbatim)
+
+```
+I've created a colour reference file for the different jobs I've worked. There are three sets of colours in there, the last set darkened. I want you to use this set of colours to change the backgrounds the four different job blocks. Use the darkest shades of blue and purple found in the file. MOH, Paymentus, should be shades of blue, SL |eONE, TF should be shades of purple. ensure that you pick unique enough colours, and make sure they are still discernable on the darkbackgrounds used. change the squares to  use the darkest representation of each of the four companies.   as for the text representing those companies in the employment rages at the bottom of the page, change the text colours to be the lighter version within the dark UI section of the image. That way the contrast will bigger for the text on the existing background, but still relatively consistent. 
+
+describe precisely how you end up selecting the colours you do, and write this in run entry. update the transcribe to reference this new job-colors image embedded. update transcribe file as normal. commit.
+```
+
+### Actions Taken (summary)
+- Applied the Set C (Dark UI) colors to work-range square backgrounds and Set B colors to legend text.
+- Embedded the job color reference image.
+
+![Job color reference](trn/job-colors.png)

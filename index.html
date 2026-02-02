@@ -891,6 +891,11 @@
       return workRanges.some((range) => dateStr >= range.start && dateStr <= range.end);
     }
 
+    function getWorkRangeForDate(dateStr) {
+      if (!workRanges.length) return null;
+      return workRanges.find((range) => dateStr >= range.start && dateStr <= range.end) || null;
+    }
+
     function getGmuRange() {
       const dates = [];
       for (const [dateStr, origins] of originByDate.entries()) {
@@ -1270,8 +1275,11 @@
           if (gmuCount > 0) {
             cell.classList.add('gmu');
           }
-        } else if (shouldUseWorkRange(dateStr)) {
-          cell.style.background = '#000000';
+        } else {
+          const range = getWorkRangeForDate(dateStr);
+          if (range) {
+            cell.style.background = range.color || '#000000';
+          }
         }
         if (inYear) {
           cell.addEventListener('click', (event) => {
@@ -1588,7 +1596,9 @@
       if (!container) return;
       const gmuRange = getGmuRange();
       const lines = workRanges.map((range) => {
-        return `<div><span class="swatch" style="background:#000000;"></span> ${range.name} — ${range.start} to ${range.end}</div>`;
+        const swatch = range.color || '#000000';
+        const textColor = range.textColor || 'var(--ink)';
+        return `<div style="color:${textColor};"><span class="swatch" style="background:${swatch};"></span> ${range.name} — ${range.start} to ${range.end}</div>`;
       });
       if (gmuRange) {
         lines.push(`<div><span class="swatch" style="background:var(--grid-2-gmu);"></span> GMU activity — ${gmuRange.start} to ${gmuRange.end}</div>`);

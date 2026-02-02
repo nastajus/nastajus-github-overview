@@ -211,3 +211,15 @@ Tooltip popups needed to avoid overflowing the right edge, and work-history rang
 ### Consequences
 - Popups no longer overflow the right edge.
 - Work ranges are represented visually and documented in the UI.
+
+## ADR-17
+
+### Context
+Work-range colors needed to follow a provided palette with dark UI-friendly squares and lighter legend text.
+
+### Decision
+- Use Set C (Dark UI) colors for work-range square backgrounds.
+- Use Set B colors for legend text to increase contrast on the dark background.
+
+### Consequences
+- Work-range squares are distinct and readable in the heatmap; legend text remains high-contrast.
