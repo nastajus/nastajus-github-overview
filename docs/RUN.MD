@@ -331,3 +331,18 @@
 
 ### Feedback / Suggestions
 - If SL should be brighter than TF instead, I can swap SL to Set B while keeping TF as-is.
+
+## RUN-22
+
+### Session Notes
+- Added a work-range refresh pass to preserve job background colors when filters or day focus are toggled.
+- Embedded the job color reference and summarized final background colors in TRN.
+
+### What Worked
+- Reapplying range colors after filter state changes keeps empty-day shading intact.
+
+### What Was Tricky
+- Ensuring the refresh logic skips days that already have commit levels.
+
+### Feedback / Suggestions
+- If you later want per-origin overlays on top of work ranges, we can layer a subtle hatch.

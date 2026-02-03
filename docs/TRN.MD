@@ -331,3 +331,31 @@ the payment is noncolor you selected is is like a blue green shade. I don't gree
 ### Actions Taken (summary)
 - Shifted Paymentus to a deeper blue (#0B2F6B).
 - Darkened SL | eONE to a muted purple (#7F768A) while keeping TF unchanged.
+
+## TRN-22
+
+### Prompt (verbatim)
+
+```
+you can reference the job colours file in the TRN file, by embedding it. Summarize the final colours chosen for the backgrounds. Make a note that the foreground colours are not ideal for the four jobs, but I'm just going to leave it because I don't care. 
+
+there's a kind of bug that once you click anything and player filters, all the job backgrounds are lost. Please change so that it persists instead. 
+```
+
+### Actions Taken (summary)
+- Embedded the job color reference image and summarized the final background colors.
+- Noted that foreground text colors are suboptimal but kept as-is.
+- Fixed work-range background persistence when filters or focus are toggled.
+
+### Job Color Reference
+
+![Job color reference](trn/job-colors.png)
+
+### Final Background Colors
+
+- MOH: #085655
+- Paymentus: #0B2F6B
+- SL | eONE: #1C0095
+- TF: #342A74
+
+Foreground text colors are not ideal, but are left unchanged by request.

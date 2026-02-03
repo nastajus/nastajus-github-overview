@@ -939,6 +939,22 @@
       }
     }
 
+    function refreshWorkRangeColors() {
+      if (!workRanges.length) return;
+      document.querySelectorAll('.day-cell').forEach((cell) => {
+        if (cell.classList.contains('outside')) return;
+        if (cell.classList.contains('level-1') || cell.classList.contains('level-2') || cell.classList.contains('level-3') || cell.classList.contains('level-4')) {
+          return;
+        }
+        const range = getWorkRangeForDate(cell.dataset.date);
+        if (range) {
+          cell.style.background = range.color || '#000000';
+        } else {
+          cell.style.background = '';
+        }
+      });
+    }
+
     function clearRepoFilter() {
       currentRepoFilter = null;
       filterPill.style.display = 'none';
@@ -948,6 +964,7 @@
       document.querySelectorAll('.day-cell.highlight').forEach((cell) => {
         cell.classList.remove('highlight');
       });
+      refreshWorkRangeColors();
     }
 
     function applyOriginFilter(originLabel) {
@@ -995,6 +1012,7 @@
       document.querySelectorAll('.repo-card').forEach((card) => {
         card.style.display = '';
       });
+      refreshWorkRangeColors();
     }
 
     function buildOriginTag(repoName) {
@@ -1089,6 +1107,7 @@
         cell.style.background = '';
       });
       hideDayPopup();
+      refreshWorkRangeColors();
     }
 
     function showDayPopup(cell, dateStr) {

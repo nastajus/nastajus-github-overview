@@ -245,3 +245,14 @@ Paymentus needed a less green, more blue hue and SL | eONE needed a darker purpl
 
 ### Consequences
 - Paymentus now reads more blue; SL is darker and less vibrant, while TF stays the darker purple.
+
+## ADR-20
+
+### Context
+Work-range background colors disappeared when filters or day focus were toggled.
+
+### Decision
+- Reapply work-range colors after any filter or focus change, while skipping commit days.
+
+### Consequences
+- Employment shading persists across interactive states.
